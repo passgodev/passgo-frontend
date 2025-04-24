@@ -3,6 +3,7 @@ import RequireAuth from './components/RequireAuth.tsx';
 import Home from './pages/Home.tsx';
 import LoginPage from './pages/LoginPage.tsx';
 import { Routes, Route } from 'react-router-dom';
+import SignupPage from './pages/signup/SignupPage.tsx';
 
 const App = () => {
     return (
@@ -11,6 +12,7 @@ const App = () => {
 
                 {/*public routes*/}
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/signup" element={<SignupPage />} />
 
                 {/*protected routes*/}
                 <Route element={<RequireAuth />}>
