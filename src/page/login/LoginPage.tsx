@@ -1,5 +1,6 @@
 import { Box, Button, Container, Paper, TextField, Typography } from "@mui/material";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useEffect, useState } from "react";
+import AlertContext from '../../context/AlertProvider.tsx';
 import useAuth from '../../hook/useAuth.ts';
 import ApiEndpoints from '../../util/endpoint/ApiEndpoint.ts';
 import WebEndpoints from '../../util/endpoint/WebEndpoint.ts';
@@ -55,6 +56,13 @@ const LoginPage = () => {
 
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
+
+    const { showAlert } = useContext(AlertContext);
+    useEffect(() => {
+        showAlert('test', 'info');
+        console.log('hidden alert')
+
+    }, [])
 
     return (
         <Container maxWidth="sm" sx={{ mt: 8 }}>
