@@ -1,9 +1,10 @@
-import Layout from './components/Layout.tsx';
-import RequireAuth from './components/RequireAuth.tsx';
-import Home from './pages/Home.tsx';
-import LoginPage from './pages/LoginPage.tsx';
-import { Routes, Route } from 'react-router-dom';
-import SignupPage from './pages/signup/SignupPage.tsx';
+import { Route, Routes } from 'react-router-dom';
+import Layout from './component/Layout.tsx';
+import RequireAuth from './component/RequireAuth.tsx';
+import Home from './page/Home.tsx';
+import LoginPage from './page/login/LoginPage.tsx';
+import SignupPage from './page/signup/SignupPage.tsx';
+
 
 const App = () => {
     return (
