@@ -14,7 +14,7 @@ type Endpoints = {
 }
 
 
-const ENDPOINTS: Endpoints = {
+const ApiEndpoints: Endpoints = {
     health: endpointCreator('/health'),
     signup: endpointCreator('/auth/signup'),
     login: endpointCreator('/auth/login')
@@ -24,4 +24,4 @@ function endpointCreator(endpoint: string): string {
     return API_PREFIX + endpoint;
 }
 
-export { ENDPOINTS, ApiEndpoint, type Endpoint };
+export default ApiEndpoints;

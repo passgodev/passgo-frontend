@@ -1,8 +1,9 @@
 import { Box, Button, Container, Paper, TextField, Typography } from "@mui/material";
 import { FormEvent, useState } from "react";
-import useAuth from '../hooks/useAuth.ts';
-import { ENDPOINTS } from '../utils/ApiEndpoint.ts';
-import HttpMethod from '../utils/HttpMethod.ts';
+import useAuth from '../../hook/useAuth.ts';
+import ApiEndpoints from '../../util/endpoint/ApiEndpoint.ts';
+import WebEndpoints from '../../util/endpoint/WebEndpoint.ts';
+import HttpMethod from '../../util/HttpMethod.ts';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 
@@ -21,7 +22,7 @@ const LoginPage = () => {
 
         console.log("Form submitted", login, password);
         const response = await fetch(
-            ENDPOINTS.login,
+            ApiEndpoints.login,
             {
                 method: HttpMethod.POST,
                 body: JSON.stringify({login, password}),
@@ -55,7 +56,6 @@ const LoginPage = () => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
 
-
     return (
         <Container maxWidth="sm" sx={{ mt: 8 }}>
             <Paper elevation={3} sx={{ p: 4 }}>
@@ -87,6 +87,18 @@ const LoginPage = () => {
                         Log In
                     </Button>
                 </Box>
+                <Typography
+                    marginTop={"20px"}
+                >
+                    Don't have an account?
+                    <Button variant="text" color="primary"
+                            style={{backgroundColor: 'transparent'}}
+                            onClick={() => {
+                        navigate(WebEndpoints.signup);
+                    }}>
+                        Signup
+                    </Button>
+                </Typography>
             </Paper>
         </Container>
     );
