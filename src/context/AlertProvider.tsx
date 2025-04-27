@@ -1,7 +1,7 @@
 import { Alert, Snackbar } from '@mui/material';
 import { createContext, ReactNode, useState } from 'react';
 
-type AlertLevel = 'info';
+type AlertLevel = 'info' | 'error';
 
 interface IAlert {
     showAlert: (message: string, level: AlertLevel) => void
@@ -33,8 +33,12 @@ export const AlertProvider = ({ children }: AlertProviderProps) => {
     return (
         <AlertContext.Provider value={{ showAlert }}>
             {children}
-            <Snackbar anchorOrigin={{vertical: 'bottom', horizontal: 'right'}} open={open} autoHideDuration={3000} onClose={hideAlert}>
-                <Alert onClose={hideAlert} severity={level} variant="filled" sx={{ width: '100%' }}>
+            <Snackbar anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
+                      open={open}
+                      autoHideDuration={3000}
+                      onClose={hideAlert}
+                      slotProps={{clickAwayListener: { mouseEvent: false } }}>
+                <Alert onClose={hideAlert} severity={level} sx={{ width: '100%' }}>
                     {message}
                 </Alert>
             </Snackbar>
