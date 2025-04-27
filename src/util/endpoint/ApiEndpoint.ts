@@ -5,6 +5,7 @@ enum ApiEndpoint {
     HEALTH,
     SIGNUP,
     LOGIN,
+    REFRESH
 }
 
 type Endpoint = string;
@@ -17,7 +18,8 @@ type Endpoints = {
 const ApiEndpoints: Endpoints = {
     health: endpointCreator('/health'),
     signup: endpointCreator('/auth/signup'),
-    login: endpointCreator('/auth/login')
+    login: endpointCreator('/auth/login'),
+    refresh: endpointCreator('/auth/refresh'),
 }
 
 function endpointCreator(endpoint: string): string {
