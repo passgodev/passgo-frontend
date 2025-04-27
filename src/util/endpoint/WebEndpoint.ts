@@ -1,11 +1,12 @@
+import { Endpoint } from './Endpoint.ts';
+
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 enum WebEndpoint {
     LOGIN,
     SIGNUP,
     HOME
 }
-
-type Endpoint = string;
 
 type Endpoints = {
     readonly [key in keyof typeof WebEndpoint as Lowercase<key>]: Endpoint;

@@ -1,3 +1,6 @@
+import { Endpoint } from './Endpoint.ts';
+
+
 const API_PREFIX = "/api"
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -7,8 +10,6 @@ enum ApiEndpoint {
     LOGIN,
     REFRESH
 }
-
-type Endpoint = string;
 
 type Endpoints = {
     readonly [key in keyof typeof ApiEndpoint as Lowercase<string & key>]: Endpoint;
