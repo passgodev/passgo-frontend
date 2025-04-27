@@ -1,5 +1,6 @@
 import { Route, Routes } from 'react-router-dom';
 import Layout from './component/Layout.tsx';
+import PersistLogin from './component/PersistLogin.tsx';
 import RequireAuth from './component/RequireAuth.tsx';
 import Home from './page/Home.tsx';
 import LoginPage from './page/login/LoginPage.tsx';
@@ -16,8 +17,10 @@ const App = () => {
                 <Route path="/signup" element={<SignupPage />} />
 
                 {/*protected routes*/}
-                <Route element={<RequireAuth />}>
-                    <Route path="/" element={<Home />} />
+                <Route element={<PersistLogin />} >
+                    <Route element={<RequireAuth />}>
+                        <Route path="/" element={<Home />} />
+                    </Route>
                 </Route>
 
             </Route>
