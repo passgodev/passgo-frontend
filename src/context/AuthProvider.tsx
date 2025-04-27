@@ -1,16 +1,17 @@
-import { createContext,  ReactNode,  useState } from "react";
+import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react";
 
 interface AuthProviderProps {
     children: ReactNode;
 }
 
 interface Auth {
-    token?: string
+    token?: string,
+    refreshToken?: string,
 }
 
 interface IAuthContext {
     auth: Auth,
-    setAuth: (val: Auth) => void
+    setAuth:  Dispatch<SetStateAction<Auth>>
 }
 
 const AuthContext = createContext<IAuthContext>({
@@ -18,7 +19,7 @@ const AuthContext = createContext<IAuthContext>({
     setAuth: () => {}
 });
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+const AuthProvider = ({ children }: AuthProviderProps) => {
     const [auth, setAuth] = useState<Auth>({});
 
     return (
@@ -27,5 +28,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
         </AuthContext.Provider>
     )
 };
+
+export { AuthProvider, type Auth }
 
 export default AuthContext;
