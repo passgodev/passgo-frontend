@@ -1,24 +1,29 @@
 import { Box, Button, Container, Paper, TextField, Typography } from "@mui/material";
-import { FormEvent, useContext, useEffect, useState } from "react";
+import { FormEvent, useCallback, useContext, useState } from "react";
+import { useLocation, useNavigate } from 'react-router-dom';
 import AlertContext from '../../context/AlertProvider.tsx';
+import { Auth } from '../../context/AuthProvider.tsx';
 import useAuth from '../../hook/useAuth.ts';
 import ApiEndpoints from '../../util/endpoint/ApiEndpoint.ts';
 import WebEndpoints from '../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../util/HttpMethod.ts';
-import { useNavigate, useLocation } from 'react-router-dom';
 
 
 interface LoginResponse {
-    token: string
+    token: string,
+    refreshToken: string
 }
 
 const LoginPage = () => {
+    const [login, setLogin] = useState('');
+    const [password, setPassword] = useState('');
+    const { showAlert } = useContext(AlertContext);
     const { setAuth } = useAuth();
     const navigate = useNavigate();
     const location = useLocation();
     const from = location.state?.from?.pathname || '/';
 
-    const handleSubmit = async (event: FormEvent) => {
+    const handleSubmit = useCallback(async (event: FormEvent) => {
         event.preventDefault();
 
         console.log("Form submitted", login, password);
@@ -30,39 +35,36 @@ const LoginPage = () => {
                 headers: {'Content-Type': 'application/json'},
                 credentials: 'include',
             })
-            .then(res => {
-              if (res.status === 200) {
-                  return res.text();
-              } else {
-                  console.log('unexpected responseCode: ', res);
-              }
-            }).then(text => {
-                const jsonResponse = JSON.parse(text || "") as unknown as LoginResponse;
-                const accessToken = jsonResponse?.token;
-                const authObject = {token: accessToken};
+            .then(async (res) => {
+                console.log(res);
+                const text = await res.clone().text();
 
-                console.log('authenticated response: ', jsonResponse, authObject);
+                if (res.status === 200) {
+                    const jsonResponse = JSON.parse(text || "") as unknown as LoginResponse;
+                    const accessToken = jsonResponse?.token;
+                    const refreshToken = jsonResponse?.refreshToken;
+                    const authObject: Auth = {token: accessToken, refreshToken: refreshToken};
 
-                setAuth(authObject);
+                    console.log('authenticated response: ', jsonResponse, authObject);
 
-                setLogin('');
-                setPassword('');
+                    setAuth(authObject);
+                    // todo change to http only cookies, do not store it locally
+                    localStorage.setItem('passgoRT', refreshToken);
 
-                navigate(from, {replace: true});
+                    setLogin('');
+                    setPassword('');
+
+                    navigate(from, {replace: true});
+                } else if ( res.status >= 400 && res.status < 599 ) {
+                    const errMsg = (text.length  !== 0) ? text : (res.status + ' ' + res.statusText);
+                    showAlert(errMsg, 'error')
+                } else {
+                    console.log('unexpected responseCode: ', res);
+                }
             })
             .catch(err => console.log('err', err));
         console.log(response);
-    };
-
-    const [login, setLogin] = useState('');
-    const [password, setPassword] = useState('');
-
-    const { showAlert } = useContext(AlertContext);
-    useEffect(() => {
-        showAlert('test', 'info');
-        console.log('hidden alert')
-
-    }, [])
+    }, [from, login, navigate, password, setAuth, showAlert]);
 
     return (
         <Container maxWidth="sm" sx={{ mt: 8 }}>
@@ -102,8 +104,8 @@ const LoginPage = () => {
                     <Button variant="text" color="primary"
                             style={{backgroundColor: 'transparent'}}
                             onClick={() => {
-                        navigate(WebEndpoints.signup);
-                    }}>
+                                navigate(WebEndpoints.signup);
+                            }}>
                         Signup
                     </Button>
                 </Typography>
