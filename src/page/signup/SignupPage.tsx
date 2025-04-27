@@ -1,8 +1,7 @@
 import { Box, Button, Container, Divider, Paper, Stack, styled, Typography } from "@mui/material";
-import { useState } from 'react';
+import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import WebEndpoints from '../../util/endpoint/WebEndpoint.ts';
-import WebEndpoint from '../../util/endpoint/WebEndpoint.ts';
 import ClientSignupCredentialComponent from './member/ClientSignupCredentialComponent.tsx';
 import OrganizerSignupCredentialComponent from './member/OrganizerSignupCredentialComponent.tsx';
 
@@ -12,7 +11,7 @@ const Item = styled(Paper)(({ theme }) => ({
     ...theme.typography.body2,
     padding: theme.spacing(1),
     textAlign: 'center',
-    color: (theme.vars ?? theme).palette.text.secondary,
+    color: theme.palette.text.secondary,
     ...theme.applyStyles('dark', {
         backgroundColor: '#1A2027',
     }),
@@ -32,7 +31,8 @@ const SignupPage = () => {
         memberSubmitHandler = memberHandleSubmitCallback;
     }
 
-    const handleSubmit = async () => {
+    const handleSubmit = async (e: FormEvent) => {
+        e.preventDefault();
         memberSubmitHandler();
     }
 
@@ -40,6 +40,7 @@ const SignupPage = () => {
         return Object.keys(MemberType)
             .filter(key => isNaN(Number(key)))
             .map((key, i) => {
+                // @ts-expect-error  key is a string, but number is expected. Here we are using object's mechanism which is: obj["property"]
                 const membrType = MemberType[key];
                 const isActive = (membrType === currentMember);
 
@@ -68,7 +69,7 @@ const SignupPage = () => {
                     component="form"
                     noValidate
                     autoComplete="off"
-                    onSubmit={() => handleSubmit()}
+                    onSubmit={(e) => handleSubmit(e)}
                     sx={{ display: "flex", flexDirection: "column", gap: 2 }}
                 >
                     <Stack

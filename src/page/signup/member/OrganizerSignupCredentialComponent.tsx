@@ -1,6 +1,8 @@
 import { TextField } from '@mui/material';
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import ApiEndpoints from '../../../util/endpoint/ApiEndpoint.ts';
+import WebEndpoints from '../../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../../util/HttpMethod.ts';
 
 
@@ -12,6 +14,8 @@ const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => v
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+
+    const navigate = useNavigate();
 
     const signupBody = {
         credentials: {
@@ -39,7 +43,11 @@ const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => v
                 body: JSON.stringify(signupBody),
                 headers: headers
             }
-        );
+        ).then((res) => {
+            if ( res.status === 200 ) {
+                navigate(WebEndpoints.login);
+            }
+        });
     }
 
     props.handleSubmit(() => handleSubmit());

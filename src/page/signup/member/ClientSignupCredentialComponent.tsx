@@ -1,6 +1,9 @@
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import AlertContext from '../../../context/AlertProvider.tsx';
 import ApiEndpoints from '../../../util/endpoint/ApiEndpoint.ts';
+import WebEndpoints from '../../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../../util/HttpMethod.ts';
 
 
@@ -11,6 +14,9 @@ const ClientSignupCredentialComponent = (props: {handleSubmit: (func: () => void
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
+
+    const navigate = useNavigate();
+    const { showAlert } = useContext(AlertContext);
 
     const signupBody = {
         credentials: {
@@ -35,7 +41,13 @@ const ClientSignupCredentialComponent = (props: {handleSubmit: (func: () => void
                 body: JSON.stringify(signupBody),
                 headers: headers
             }
-        );
+        ).then((res) => {
+            console.log('client signup response', res);
+            if ( res.status === 200 ) {
+                showAlert(res.statusText, 'info');
+                navigate(WebEndpoints.login);
+            }
+        });
     }
 
     props.handleSubmit(() => handleSubmit());
