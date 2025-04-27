@@ -1,4 +1,6 @@
-import { Endpoint } from '../util/endpoint/WebEndpoint.ts';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { Endpoint } from '../util/endpoint/Endpoint.ts';
+import WebEndpoints from '../util/endpoint/WebEndpoint.ts';
 import useAuth from './useAuth.ts';
 import useRefreshToken from './useRefreshToken.ts';
 
@@ -13,6 +15,8 @@ const MAX_RETRIES = 3;
 const useInterceptedFetch = () => {
     const refresh = useRefreshToken();
     const { auth } = useAuth();
+    const navigate = useNavigate();
+    const location = useLocation();
 
     let retries = MAX_RETRIES;
     const interceptedFetch = async ({endpoint, reqInit}: useInterceptedFetchProps) => {
@@ -42,6 +46,10 @@ const useInterceptedFetch = () => {
                 if (res.status === 403) {
                     console.log('refreshed access token')
                     const newAccessToken = await refresh();
+
+                    if ( newAccessToken === undefined ) {
+                        navigate(WebEndpoints.login, {state: {from: location}, replace: true});
+                    }
 
                     const newHeaders = new Headers(headers);
                     newHeaders.set('Content-Type', 'application/json');

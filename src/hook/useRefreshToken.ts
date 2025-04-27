@@ -5,8 +5,8 @@ import useAuth from './useAuth';
 
 
 interface RefreshResponse {
-    refreshToken: string;
-    token: string;
+    refreshToken?: string;
+    token?: string;
 }
 
 const UseRefreshToken = () => {
@@ -20,14 +20,22 @@ const UseRefreshToken = () => {
         const response = await fetch(ApiEndpoint.refresh,
             {
                 method: HttpMethod.POST,
-                body: JSON.stringify({refreshToken: refreshToken }),
+                body: JSON.stringify({ refreshToken: refreshToken }),
                 credentials: 'include',
                 headers
             }
         )
         .then(async (res) => {
             const text = await res.text();
-            return JSON.parse(text) as RefreshResponse;
+
+            if ( res.status === 200 ) {
+                return JSON.parse(text) as RefreshResponse;
+            } else {
+                return {
+                    token: undefined,
+                    refreshToken: refreshToken,
+                } as RefreshResponse;
+            }
         });
 
         setAuth(prev => {
