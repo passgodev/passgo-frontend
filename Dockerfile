@@ -2,8 +2,9 @@ FROM node:23-alpine AS base
 WORKDIR /app
 COPY ./package.json ./package-lock.json ./
 RUN npm install
+COPY ./ ./
 
-FROM base as build
+FROM base AS build
 WORKDIR /app
 COPY --from=base /app ./
 RUN npm run build
@@ -13,7 +14,7 @@ RUN npm run build
 # container run: docker run -p 59002:5173 --name 'passgo-frontend-cont-dev' -d 'passgo-frontend-img-dev'
 FROM base AS dev
 WORKDIR /app
-COPY --from=build /app /
+COPY --from=base /app ./
 EXPOSE 5173
 CMD ["npm", "run", "dev", "--", "--host"]
 
