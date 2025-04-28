@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Do not track files which can hold environment variables data
+.env*
+# Do store example env files
+!.env*example*
