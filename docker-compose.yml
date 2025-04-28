@@ -5,6 +5,9 @@ services:
       context: .
       target: "${FRONT_DOCKER_TARGET}"
     image: "passgo-frontend-img-${FRONT_DOCKER_TARGET}"
+    env_file:
+      - path: .env.cntr
+        required: true
     pull_policy: build
     container_name: "${FRONT_PROJECT_NAME}"
     ports:
