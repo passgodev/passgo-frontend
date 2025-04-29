@@ -1,4 +1,5 @@
 import { useLocation, Navigate, Outlet } from 'react-router-dom';
+import FeatureFlag from '../FeatureFlag.ts';
 import useAuth from '../hook/useAuth.ts';
 
 const RequireAuth = () => {
@@ -7,7 +8,7 @@ const RequireAuth = () => {
     console.log('auth', auth);
 
     return (
-        auth?.token
+        auth?.token || !FeatureFlag.requireAuth
             ? <Outlet />
             : <Navigate to="/login" state={{from: location}} replace />
     );
