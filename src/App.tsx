@@ -5,6 +5,7 @@ import RequireAuth from './component/RequireAuth.tsx';
 import Home from './page/Home.tsx';
 import LoginPage from './page/login/LoginPage.tsx';
 import SignupPage from './page/signup/SignupPage.tsx';
+import Transaction from './page/Transaction.tsx';
 
 
 const App = () => {
@@ -20,6 +21,7 @@ const App = () => {
                 <Route element={<PersistLogin />} >
                     <Route element={<RequireAuth />}>
                         <Route path="/" element={<Home />} />
+                            <Route path="/transaction" element={<Transaction />} />
                     </Route>
                 </Route>
 
