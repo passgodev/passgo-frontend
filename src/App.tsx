@@ -11,7 +11,7 @@ import Transaction from './page/Transaction.tsx';
 const App = () => {
     return (
         <Routes>
-            <Route path="/" element={<Layout />} >
+            <Route path="/" >
 
                 {/*public routes*/}
                 <Route path="/login" element={<LoginPage />} />
@@ -20,8 +20,11 @@ const App = () => {
                 {/*protected routes*/}
                 <Route element={<PersistLogin />} >
                     <Route element={<RequireAuth />}>
-                        <Route path="/" element={<Home />} />
+                        <Route element={<Layout />} >
+
+                            <Route path="/" element={<Home />} />
                             <Route path="/transaction" element={<Transaction />} />
+                        </Route>
                     </Route>
                 </Route>
 
