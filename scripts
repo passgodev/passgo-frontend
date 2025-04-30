@@ -1,0 +1,8 @@
+# var in brackets [example] are not mandatory
+# var in angle brackets <example> provide variable name (only in context of running a command) and its possible values
+
+# Running frontend docker compose (network should just already exist)
+docker compose --env-file .env-<target := dev | prod> up -d [frontend]
+
+# Take down frontend service
+docker compose --env-file .env-<target := dev | prod> down -d [frontend]
