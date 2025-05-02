@@ -1,0 +1,11 @@
+server {
+    root html;
+
+    location / {
+        try_files $uri $uri/ /index.html;
+    }
+
+    location /api/ {
+        proxy_pass http://${VITE_API_HOSTNAME}:${VITE_API_PORT}/rest-api/;
+    }
+}

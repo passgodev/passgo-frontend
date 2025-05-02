@@ -22,6 +22,7 @@ CMD ["npm", "run", "dev", "--", "--host", "--mode", "cntr"]
 # img build: docker build -t 'passgo-frontend-img-prod' --target prod .
 # container run: docker run -p 59001:5173 --name 'passgo-frontend-cont-prod' -d 'passgo-frontend-img-prod'
 FROM nginx:stable-alpine AS prod
-COPY --from=build /app/dist /usr/share/nginx/html
+COPY --from=build /app/dist /etc/nginx/html/
+COPY ./templates /etc/nginx/templates
 EXPOSE 80
 CMD ["nginx", "-g", "daemon off;"]
