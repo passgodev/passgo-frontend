@@ -2,9 +2,9 @@ import { Box, Link, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationInitialState } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
 import useInterceptedFetch from '../../hook/useInterceptedFetch.ts';
+import TransactionDto from '../../model/transaction/TransactionDto.ts';
 import ApiEndpoints from '../../util/endpoint/ApiEndpoint.ts';
 import { Paginated } from '../../util/pagination/Paginated.ts';
-import TransactionDto from '../../model/transaction/TransactionDto.ts';
 
 
 const columns: GridColDef<TransactionDto>[] = [
@@ -34,7 +34,7 @@ const columns: GridColDef<TransactionDto>[] = [
                 </Link>
             </Typography>
         }
-},
+    },
 ];
 
 const DEFAULT_TRANSACTIONS: TransactionDto[] = [];
@@ -42,6 +42,7 @@ const DEFAULT_TRANSACTIONS: TransactionDto[] = [];
 const Transaction = () => {
     const fetch = useInterceptedFetch();
     const [paginatedTransactions, setPaginatedTransactions] = useState<Paginated<TransactionDto>>();
+    const [transactionError, setTransactionError] = useState('');
 
     useEffect(() => {
         fetch({ endpoint: ApiEndpoints.transaction })
@@ -49,7 +50,11 @@ const Transaction = () => {
             .then(paginatedTransaction => {
                 console.log('Paginated Transaction', paginatedTransaction);
                 setPaginatedTransactions(paginatedTransaction);
-            });
+            })
+            .catch(err => {
+                console.log('trsansaction fetch error', err);
+                setTransactionError('error occured');
+            })
     }, []);
 
     const transactions = paginatedTransactions?.content ?? DEFAULT_TRANSACTIONS;
@@ -62,18 +67,21 @@ const Transaction = () => {
 
     return (
         <Box>
-            {transactionsLength > 0 ?
-            <DataGrid
-                rows={transactions}
-                columns={columns}
-                initialState={{
-                    pagination
-                }}
-                pageSizeOptions={[1, 5, 10]}
-                checkboxSelection
-                disableRowSelectionOnClick
-            />
-            : <Typography>Loading</Typography>}
+            {
+                transactionError !== ''
+                    ? <Typography>Error</Typography>
+                    : transactionsLength > 0
+                        ? <DataGrid
+                            rows={transactions}
+                            columns={columns}
+                            initialState={{
+                                pagination
+                            }}
+                            pageSizeOptions={[1, 5, 10]}
+                            checkboxSelection
+                            disableRowSelectionOnClick
+                        />
+                        : <Typography>Loading</Typography>}
         </Box>
     );
 };
