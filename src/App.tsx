@@ -5,7 +5,7 @@ import RequireAuth from './component/RequireAuth.tsx';
 import Home from './page/Home.tsx';
 import LoginPage from './page/login/LoginPage.tsx';
 import SignupPage from './page/signup/SignupPage.tsx';
-import Transaction from './page/Transaction.tsx';
+import Transaction from './page/transaction/Transaction.tsx';
 
 
 const App = () => {

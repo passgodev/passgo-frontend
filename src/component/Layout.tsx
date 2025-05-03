@@ -10,7 +10,9 @@ import {
     Toolbar,
     Typography
 } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
+import webEndpoint from '../util/endpoint/WebEndpoint.ts';
+
 
 const drawerWidth = 240;
 
@@ -23,8 +25,10 @@ const Layout = () => {
             <AppBar position="static" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar>
                     <Typography variant="h6" noWrap component="div">
+                        <Link to={webEndpoint.home} style={{ textDecoration: 'none', color: 'white' }}>
+                            PassGo
+                        </Link>
                         {/* Logo + Nazwa aplikacji */}
-                        PassGo
                     </Typography>
                 </Toolbar>
             </AppBar>
@@ -45,7 +49,7 @@ const Layout = () => {
                     <Toolbar />
                     <Box sx={{ overflow: 'auto' }}>
                         <List>
-                            <ListItemButton to="/transaction">
+                            <ListItemButton component={Link} to={webEndpoint.transaction} >
                                 <ListItemText primary="Transactions" />
                             </ListItemButton>
                             {/* Dodaj kolejne przyciski w razie potrzeby */}
