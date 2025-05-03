@@ -5,7 +5,8 @@ import { Endpoint } from './Endpoint.ts';
 enum WebEndpoint {
     LOGIN,
     SIGNUP,
-    HOME
+    HOME,
+    TRANSACTION
 }
 
 type Endpoints = {
@@ -15,7 +16,8 @@ type Endpoints = {
 const WebEndpoints: Endpoints = {
     login: endpointCreator('/login'),
     signup: endpointCreator('/signup'),
-    home: endpointCreator('/')
+    home: endpointCreator('/'),
+    transaction: endpointCreator('/transaction')
 }
 
 function endpointCreator(endpoint: string): string {
