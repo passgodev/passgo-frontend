@@ -1,6 +1,7 @@
-import { Box, Link, Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import { DataGrid, GridColDef, GridPaginationInitialState } from '@mui/x-data-grid';
 import { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import useInterceptedFetch from '../../hook/useInterceptedFetch.ts';
 import TransactionDto from '../../model/transaction/TransactionDto.ts';
 import ApiEndpoints from '../../util/endpoint/ApiEndpoint.ts';
@@ -28,10 +29,8 @@ const columns: GridColDef<TransactionDto>[] = [
         editable: true,
         renderCell: (cell) => {
             const {id, firstName, lastName} = cell.formattedValue;
-            return <Typography variant='button' onClick={() => console.log('onClick - client Cell', cell)}>
-                <Link href={`http://localhost:8080/api/members/${id}?type=client`} >
-                    {firstName + ' ' + lastName}
-                </Link>
+            return <Typography component={Link} to={`/clients/${id}`}>
+                {firstName + ' ' + lastName}
             </Typography>
         }
     },
