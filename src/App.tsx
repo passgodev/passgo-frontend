@@ -11,27 +11,28 @@ import SignupPage from './page/signup/SignupPage.tsx';
 import TestOnlyAuthorized from './page/TestOnlyAuthorized.tsx';
 import Transaction from './page/transaction/Transaction.tsx';
 import UnauthorizedPage from './page/UnauthorizedPage.tsx';
+import WEB_ENDPOINTS from './util/endpoint/WebEndpoint.ts';
 
 
 const App = () => {
     return (
         <Routes>
-            <Route path="/" >
+            <Route path={WEB_ENDPOINTS.home} >
 
                 {/* public routes */}
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/signup" element={<SignupPage />} />
-                <Route path="/unauthorized" element={<UnauthorizedPage />} />
+                <Route path={WEB_ENDPOINTS.login} element={<LoginPage />} />
+                <Route path={WEB_ENDPOINTS.signup} element={<SignupPage />} />
+                <Route path={WEB_ENDPOINTS.unauthorized} element={<UnauthorizedPage />} />
 
                 {/* protected routes */}
                 <Route element={<PersistLogin />} >
                     {/* member with no set role(memberType) can access */}
                     <Route element={<RequireAuth />}>
                         <Route element={<Layout />} >
-                            <Route path="/" element={<Home />} />
-                            <Route path="/transaction" element={<Transaction />} />
-                            <Route path="/clients/:id" element={<ClientInfoPage />} />
-                            <Route path="/members/me" element={<ActiveMemberProfilePage />} />
+                            <Route path={WEB_ENDPOINTS.home} element={<Home />} />
+                            <Route path={WEB_ENDPOINTS.transaction} element={<Transaction />} />
+                            <Route path={WEB_ENDPOINTS.clientById} element={<ClientInfoPage />} />
+                            <Route path={WEB_ENDPOINTS.activeMemberProfile} element={<ActiveMemberProfilePage />} />
                         </Route>
                     </Route>
                     <Route element={<RequireAuth allowedRoles={['ADMINISTRATOR']} />} >

@@ -4,8 +4,8 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AlertContext from '../../context/AlertProvider.tsx';
 import { Auth } from '../../context/AuthProvider.tsx';
 import useAuth from '../../hook/useAuth.ts';
-import ApiEndpoints from '../../util/endpoint/ApiEndpoint.ts';
-import WebEndpoints from '../../util/endpoint/WebEndpoint.ts';
+import API_ENDPOINTS from '../../util/endpoint/ApiEndpoint.ts';
+import WEB_ENDPOINTS from '../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../util/HttpMethod.ts';
 
 
@@ -42,7 +42,7 @@ const LoginPage = () => {
 
         console.log("Form submitted", login, password);
         const response = await fetch(
-            ApiEndpoints.login,
+            API_ENDPOINTS.login,
             {
                 method: HttpMethod.POST,
                 body: JSON.stringify({login, password}),
@@ -119,7 +119,7 @@ const LoginPage = () => {
                     <Button variant="text" color="primary"
                             style={{backgroundColor: 'transparent'}}
                             onClick={() => {
-                                navigate(WebEndpoints.signup);
+                                navigate(WEB_ENDPOINTS.signup);
                             }}>
                         Signup
                     </Button>

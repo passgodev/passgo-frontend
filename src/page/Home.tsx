@@ -1,4 +1,6 @@
 import useInterceptedFetch from '../hook/useInterceptedFetch.ts';
+import API_ENDPOINTS from '../util/endpoint/ApiEndpoint.ts';
+import HttpMethod from '../util/HttpMethod.ts';
 
 
 const Home = () => {
@@ -8,9 +10,9 @@ const Home = () => {
         <>
             <div>Home</div>
             <button onClick={() => intercFetch({
-                endpoint: '/api/health',
+                endpoint: API_ENDPOINTS.health,
                 reqInit: {
-                    method: 'GET',
+                    method: HttpMethod.GET,
             }})}>Health</button>
         </>
     );

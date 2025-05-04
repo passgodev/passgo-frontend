@@ -1,7 +1,7 @@
 import { Box, Button, Container, Divider, Paper, Stack, styled, Typography } from "@mui/material";
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import WebEndpoints from '../../util/endpoint/WebEndpoint.ts';
+import WEB_ENDPOINTS from '../../util/endpoint/WebEndpoint.ts';
 import ClientSignupCredentialComponent from './member/ClientSignupCredentialComponent.tsx';
 import OrganizerSignupCredentialComponent from './member/OrganizerSignupCredentialComponent.tsx';
 
@@ -92,7 +92,7 @@ const SignupPage = () => {
                     <Button variant="text" color="primary"
                             style={{backgroundColor: 'transparent'}}
                             onClick={() => {
-                                navigate(WebEndpoints.login);
+                                navigate(WEB_ENDPOINTS.login);
                             }}>
                         Login
                     </Button>
