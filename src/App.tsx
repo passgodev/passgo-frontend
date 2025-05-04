@@ -6,6 +6,7 @@ import Home from './page/Home.tsx';
 import LoginPage from './page/login/LoginPage.tsx';
 import ActiveMemberProfilePage from './page/member/ActiveMemberProfilePage.tsx';
 import ClientInfoPage from './page/member/client/ClientInfoPage.tsx';
+import PageNotFound from './page/PageNotFound.tsx';
 import SignupPage from './page/signup/SignupPage.tsx';
 import TestOnlyAuthorized from './page/TestOnlyAuthorized.tsx';
 import Transaction from './page/transaction/Transaction.tsx';
@@ -41,6 +42,7 @@ const App = () => {
                 </Route>
 
             </Route>
+            <Route path='*' element={<PageNotFound />} />
         </Routes>
     );
 }
