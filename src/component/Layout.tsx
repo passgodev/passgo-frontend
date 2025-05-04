@@ -3,13 +3,14 @@ import {
     Box,
     Container,
     CssBaseline,
-    Drawer,
+    Drawer, IconButton,
     List,
     ListItemButton,
     ListItemText,
     Toolbar,
     Typography
 } from '@mui/material';
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Link, Outlet } from 'react-router-dom';
 import webEndpoint from '../util/endpoint/WebEndpoint.ts';
 
@@ -23,13 +24,23 @@ const Layout = () => {
 
             {/* AppBar: Górny pasek */}
             <AppBar position="static" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
+                <Toolbar sx={{justifyContent: 'space-between'}}>
                     <Typography variant="h6" noWrap component="div">
                         <Link to={webEndpoint.home} style={{ textDecoration: 'none', color: 'white' }}>
+                            {/* Logo + Nazwa aplikacji */}
                             PassGo
                         </Link>
-                        {/* Logo + Nazwa aplikacji */}
                     </Typography>
+                    <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        component={Link} to='/members/me'
+                    >
+                        <AccountCircle />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
 
