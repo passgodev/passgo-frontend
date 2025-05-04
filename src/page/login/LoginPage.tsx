@@ -14,6 +14,20 @@ interface LoginResponse {
     refreshToken: string
 }
 
+const retrieveMemberType = (accessToken: string) => {
+    if ( accessToken.indexOf('.') !== 2 ) {
+        console.log('retrieveMemberType : invalid jwt representation, two dots expected');
+    }
+    const payload = accessToken.split('.')[1];
+    const decodedPayload = atob(payload);
+    const payloadJson = JSON.parse(decodedPayload);
+    const memberType = payloadJson?.memberType ?? undefined;
+    if ( memberType === undefined ) {
+        console.log('retrieveMemberType : memberType is undefined');
+    }
+    return memberType;
+}
+
 const LoginPage = () => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
@@ -43,7 +57,8 @@ const LoginPage = () => {
                     const jsonResponse = JSON.parse(text || "") as unknown as LoginResponse;
                     const accessToken = jsonResponse?.token;
                     const refreshToken = jsonResponse?.refreshToken;
-                    const authObject: Auth = {token: accessToken, refreshToken: refreshToken};
+                    const memberType = retrieveMemberType(accessToken);
+                    const authObject: Auth = {token: accessToken, refreshToken: refreshToken, memberType: memberType};
 
                     console.log('authenticated response: ', jsonResponse, authObject);
 

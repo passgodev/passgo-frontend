@@ -7,6 +7,7 @@ interface AuthProviderProps {
 interface Auth {
     token?: string,
     refreshToken?: string,
+    memberType?: string
 }
 
 interface IAuthContext {
