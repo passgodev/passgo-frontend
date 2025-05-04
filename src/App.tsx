@@ -4,6 +4,8 @@ import PersistLogin from './component/PersistLogin.tsx';
 import RequireAuth from './component/RequireAuth.tsx';
 import Home from './page/Home.tsx';
 import LoginPage from './page/login/LoginPage.tsx';
+import ActiveMemberProfilePage from './page/member/ActiveMemberProfilePage.tsx';
+import ClientInfoPage from './page/member/client/ClientInfoPage.tsx';
 import SignupPage from './page/signup/SignupPage.tsx';
 import Transaction from './page/transaction/Transaction.tsx';
 
@@ -21,9 +23,10 @@ const App = () => {
                 <Route element={<PersistLogin />} >
                     <Route element={<RequireAuth />}>
                         <Route element={<Layout />} >
-
                             <Route path="/" element={<Home />} />
                             <Route path="/transaction" element={<Transaction />} />
+                            <Route path="/clients/:id" element={<ClientInfoPage />} />
+                            <Route path="/members/me" element={<ActiveMemberProfilePage />} />
                         </Route>
                     </Route>
                 </Route>
