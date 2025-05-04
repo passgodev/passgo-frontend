@@ -1,6 +1,7 @@
 import { Box, Button, Container, Divider, Paper, Stack, styled, Typography } from "@mui/material";
 import { FormEvent, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import MemberType from '../../model/member/MemberType.ts';
 import WEB_ENDPOINTS from '../../util/endpoint/WebEndpoint.ts';
 import ClientSignupCredentialComponent from './member/ClientSignupCredentialComponent.tsx';
 import OrganizerSignupCredentialComponent from './member/OrganizerSignupCredentialComponent.tsx';
@@ -18,11 +19,6 @@ const Item = styled(Paper)(({ theme }) => ({
 }));
 
 const SignupPage = () => {
-    enum MemberType {
-        CLIENT,
-        ORGANIZER
-    };
-
     const [activeMemberType, setActiveMemberType] = useState(MemberType.CLIENT);
     const navigate = useNavigate();
 
