@@ -2,6 +2,7 @@ import { Route, Routes } from 'react-router-dom';
 import Layout from './component/Layout.tsx';
 import PersistLogin from './component/PersistLogin.tsx';
 import RequireAuth from './component/RequireAuth.tsx';
+import Privilege from './model/member/Privilege.ts';
 import Home from './page/Home.tsx';
 import LoginPage from './page/login/LoginPage.tsx';
 import ActiveMemberProfilePage from './page/member/ActiveMemberProfilePage.tsx';
@@ -35,7 +36,7 @@ const App = () => {
                             <Route path={WEB_ENDPOINTS.activeMemberProfile} element={<ActiveMemberProfilePage />} />
                         </Route>
                     </Route>
-                    <Route element={<RequireAuth allowedRoles={['ADMINISTRATOR']} />} >
+                    <Route element={<RequireAuth allowedRoles={[Privilege.ADMINISTRATOR]} />} >
                         <Route element={<Layout />} >
                             <Route path='testauthorize' element={<TestOnlyAuthorized/>} />
                         </Route>
