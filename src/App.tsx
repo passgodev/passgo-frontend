@@ -7,6 +7,7 @@ import LoginPage from "./page/login/LoginPage.tsx";
 import SignupPage from "./page/signup/SignupPage.tsx";
 import Transaction from "./page/Transaction.tsx";
 import FaqPage from "./page/FaqPage.tsx";
+import WebEndpoints from "./util/endpoint/WebEndpoint.ts";
 
 const App = () => {
   return (
@@ -22,7 +23,7 @@ const App = () => {
             <Route element={<Layout />}>
               <Route path="/" element={<Home />} />
               <Route path="/transaction" element={<Transaction />} />
-              <Route path="/faq" element={<FaqPage />} />
+              <Route path={WebEndpoints.faq} element={<FaqPage />} />
             </Route>
           </Route>
         </Route>

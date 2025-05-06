@@ -18,7 +18,6 @@ const FaqPage = () => {
 
   useEffect(() => {
     const url = `${ApiEndpoints.faq}?page=${page}&size=${pageSize}`;
-    console.log(url);
     fetch(url)
       .then((res) => res.json())
       .then((data) => {
@@ -45,7 +44,7 @@ const FaqPage = () => {
     <>
       <h1 className="faq-header">FAQ</h1>
       {faqs.length === 0 ? (
-        <div className="no-faq">Brak dostępnych pytań.</div>
+        <div className="no-faq">No FAQs available.</div>
       ) : (
         <div className="faqs">
           <div className="page-size-selector">

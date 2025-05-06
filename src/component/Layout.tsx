@@ -11,6 +11,7 @@ import {
   Typography,
 } from "@mui/material";
 import { Link, Outlet } from "react-router-dom";
+import WebEndpoints from "../util/endpoint/WebEndpoint";
 
 const drawerWidth = 240;
 
@@ -51,7 +52,7 @@ const Layout = () => {
               <ListItemButton component={Link} to="/transaction">
                 <ListItemText primary="Transactions" />
               </ListItemButton>
-              <ListItemButton component={Link} to="/faq">
+              <ListItemButton component={Link} to={WebEndpoints.faq}>
                 <ListItemText primary="FAQ" />
               </ListItemButton>
               {/* Dodaj kolejne przyciski w razie potrzeby */}
