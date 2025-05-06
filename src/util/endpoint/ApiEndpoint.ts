@@ -1,30 +1,32 @@
-import { Endpoint } from './Endpoint.ts';
+import { Endpoint } from "./Endpoint.ts";
 
-
-const API_PREFIX = "/api"
+const API_PREFIX = "/api";
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 enum ApiEndpoint {
-    HEALTH,
-    SIGNUP,
-    LOGIN,
-    REFRESH
+  HEALTH,
+  SIGNUP,
+  LOGIN,
+  REFRESH,
+  FAQ,
 }
 
 type Endpoints = {
-    readonly [key in keyof typeof ApiEndpoint as Lowercase<string & key>]: Endpoint;
-}
-
+  readonly [key in keyof typeof ApiEndpoint as Lowercase<
+    string & key
+  >]: Endpoint;
+};
 
 const ApiEndpoints: Endpoints = {
-    health: endpointCreator('/health'),
-    signup: endpointCreator('/auth/signup'),
-    login: endpointCreator('/auth/login'),
-    refresh: endpointCreator('/auth/refresh'),
-}
+  health: endpointCreator("/health"),
+  signup: endpointCreator("/auth/signup"),
+  login: endpointCreator("/auth/login"),
+  refresh: endpointCreator("/auth/refresh"),
+  faq: endpointCreator("/faqs"),
+};
 
 function endpointCreator(endpoint: string): string {
-    return API_PREFIX + endpoint;
+  return API_PREFIX + endpoint;
 }
 
 export default ApiEndpoints;
