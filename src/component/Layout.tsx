@@ -1,16 +1,20 @@
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import {
     AppBar,
     Box,
     Container,
     CssBaseline,
     Drawer,
+    IconButton,
     List,
     ListItemButton,
     ListItemText,
     Toolbar,
     Typography
 } from '@mui/material';
-import { Outlet } from 'react-router-dom';
+import { Link, Outlet } from 'react-router-dom';
+import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
+
 
 const drawerWidth = 240;
 
@@ -21,11 +25,23 @@ const Layout = () => {
 
             {/* AppBar: Górny pasek */}
             <AppBar position="static" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
-                <Toolbar>
+                <Toolbar sx={{justifyContent: 'space-between'}}>
                     <Typography variant="h6" noWrap component="div">
-                        {/* Logo + Nazwa aplikacji */}
-                        PassGo
+                        <Link to={WEB_ENDPOINTS.home} style={{ textDecoration: 'none', color: 'white' }}>
+                            {/* Logo + Nazwa aplikacji */}
+                            PassGo
+                        </Link>
                     </Typography>
+                    <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        component={Link} to='/members/me'
+                    >
+                        <AccountCircle />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
 
@@ -45,7 +61,7 @@ const Layout = () => {
                     <Toolbar />
                     <Box sx={{ overflow: 'auto' }}>
                         <List>
-                            <ListItemButton to="/transaction">
+                            <ListItemButton component={Link} to={WEB_ENDPOINTS.transaction} >
                                 <ListItemText primary="Transactions" />
                             </ListItemButton>
                             {/* Dodaj kolejne przyciski w razie potrzeby */}
