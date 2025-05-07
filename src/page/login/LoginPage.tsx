@@ -4,14 +4,33 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AlertContext from '../../context/AlertProvider.tsx';
 import { Auth } from '../../context/AuthProvider.tsx';
 import useAuth from '../../hook/useAuth.ts';
-import ApiEndpoints from '../../util/endpoint/ApiEndpoint.ts';
-import WebEndpoints from '../../util/endpoint/WebEndpoint.ts';
+import Privilege from '../../model/member/Privilege.ts';
+import API_ENDPOINTS from '../../util/endpoint/ApiEndpoint.ts';
+import WEB_ENDPOINTS from '../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../util/HttpMethod.ts';
 
 
 interface LoginResponse {
     token: string,
     refreshToken: string
+}
+
+const transferMemberTypeToPrivilege = (accessToken: string): Privilege => {
+    if ( accessToken.indexOf('.') !== 2 ) {
+        console.log('retrieveMemberType : invalid jwt representation, two dots expected');
+    }
+    const payload = accessToken.split('.')[1];
+    const decodedPayload = atob(payload);
+    const payloadJson = JSON.parse(decodedPayload);
+    const memberType = payloadJson?.memberType ?? undefined;
+    if ( memberType === undefined ) {
+        console.log('retrieveMemberType : memberType is undefined');
+    }
+    const privilege = Privilege[memberType as keyof typeof Privilege];
+    if ( privilege === undefined ) {
+        console.log('retrieveMemberType : privilege is undefined');
+    }
+    return privilege;
 }
 
 const LoginPage = () => {
@@ -28,7 +47,7 @@ const LoginPage = () => {
 
         console.log("Form submitted", login, password);
         const response = await fetch(
-            ApiEndpoints.login,
+            API_ENDPOINTS.login,
             {
                 method: HttpMethod.POST,
                 body: JSON.stringify({login, password}),
@@ -43,7 +62,8 @@ const LoginPage = () => {
                     const jsonResponse = JSON.parse(text || "") as unknown as LoginResponse;
                     const accessToken = jsonResponse?.token;
                     const refreshToken = jsonResponse?.refreshToken;
-                    const authObject: Auth = {token: accessToken, refreshToken: refreshToken};
+                    const privilege = transferMemberTypeToPrivilege(accessToken);
+                    const authObject: Auth = {token: accessToken, refreshToken: refreshToken, privilege: privilege};
 
                     console.log('authenticated response: ', jsonResponse, authObject);
 
@@ -104,7 +124,7 @@ const LoginPage = () => {
                     <Button variant="text" color="primary"
                             style={{backgroundColor: 'transparent'}}
                             onClick={() => {
-                                navigate(WebEndpoints.signup);
+                                navigate(WEB_ENDPOINTS.signup);
                             }}>
                         Signup
                     </Button>
