@@ -1,8 +1,8 @@
 import { TextField } from '@mui/material';
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ApiEndpoints from '../../../util/endpoint/ApiEndpoint.ts';
-import WebEndpoints from '../../../util/endpoint/WebEndpoint.ts';
+import API_ENDPOINTS from '../../../util/endpoint/ApiEndpoint.ts';
+import WEB_ENDPOINTS from '../../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../../util/HttpMethod.ts';
 
 
@@ -37,7 +37,7 @@ const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => v
 
 
         await fetch(
-            `${ApiEndpoints.signup}?member=organizer`,
+            `${API_ENDPOINTS.signup}?member=organizer`,
             {
                 method: HttpMethod.POST,
                 body: JSON.stringify(signupBody),
@@ -45,7 +45,7 @@ const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => v
             }
         ).then((res) => {
             if ( res.status === 200 ) {
-                navigate(WebEndpoints.login);
+                navigate(WEB_ENDPOINTS.login);
             }
         });
     }
