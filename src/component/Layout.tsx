@@ -58,12 +58,21 @@ const Layout = () => {
                             <ListItemButton component={Link} to="/transaction">
                                 <ListItemText primary="Transactions" />
                             </ListItemButton>
+
                             <ListItemButton
                                 component={Link}
                                 to={WebEndpoints.faq}
                             >
                                 <ListItemText primary="FAQ" />
                             </ListItemButton>
+
+                            <ListItemButton
+                                component={Link}
+                                to={WebEndpoints.events}
+                            >
+                                <ListItemText primary="Events" />
+                            </ListItemButton>
+
                             {/* Dodaj kolejne przyciski w razie potrzeby */}
                         </List>
                     </Box>

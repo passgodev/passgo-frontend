@@ -9,6 +9,7 @@ enum ApiEndpoint {
     LOGIN,
     REFRESH,
     FAQ,
+    EVENTS,
 }
 
 type Endpoints = {
@@ -23,6 +24,7 @@ const ApiEndpoints: Endpoints = {
     login: endpointCreator("/auth/login"),
     refresh: endpointCreator("/auth/refresh"),
     faq: endpointCreator("/faqs"),
+    events: endpointCreator("/events"),
 };
 
 function endpointCreator(endpoint: string): string {
