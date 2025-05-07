@@ -1,6 +1,6 @@
 import { useLocation, useNavigate } from 'react-router-dom';
 import { Endpoint } from '../util/endpoint/Endpoint.ts';
-import WebEndpoints from '../util/endpoint/WebEndpoint.ts';
+import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
 import useAuth from './useAuth.ts';
 import useRefreshToken from './useRefreshToken.ts';
 
@@ -48,7 +48,7 @@ const useInterceptedFetch = () => {
                     const newAccessToken = await refresh();
 
                     if ( newAccessToken === undefined ) {
-                        navigate(WebEndpoints.login, {state: {from: location}, replace: true});
+                        navigate(WEB_ENDPOINTS.login, {state: {from: location}, replace: true});
                     }
 
                     const newHeaders = new Headers(headers);

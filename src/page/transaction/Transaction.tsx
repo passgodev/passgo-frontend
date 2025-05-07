@@ -4,7 +4,8 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import useInterceptedFetch from '../../hook/useInterceptedFetch.ts';
 import TransactionDto from '../../model/transaction/TransactionDto.ts';
-import ApiEndpoints from '../../util/endpoint/ApiEndpoint.ts';
+import API_ENDPOINTS from '../../util/endpoint/ApiEndpoint.ts';
+import WEB_ENDPOINTS from '../../util/endpoint/WebEndpoint.ts';
 import { Paginated } from '../../util/pagination/Paginated.ts';
 
 
@@ -29,7 +30,7 @@ const columns: GridColDef<TransactionDto>[] = [
         editable: true,
         renderCell: (cell) => {
             const {id, firstName, lastName} = cell.formattedValue;
-            return <Typography component={Link} to={`/clients/${id}`}>
+            return <Typography component={Link} to={WEB_ENDPOINTS.clientById.replace(':id', id)}>
                 {firstName + ' ' + lastName}
             </Typography>
         }
@@ -44,8 +45,8 @@ const Transaction = () => {
     const [transactionError, setTransactionError] = useState('');
 
     useEffect(() => {
-        fetch({ endpoint: ApiEndpoints.transaction })
-            .then((response) => response.json() as unknown as Paginated<TransactionDto>)
+        fetch({ endpoint: API_ENDPOINTS.transactions })
+            .then(response => response.json() as unknown as Paginated<TransactionDto>)
             .then(paginatedTransaction => {
                 console.log('Paginated Transaction', paginatedTransaction);
                 setPaginatedTransactions(paginatedTransaction);

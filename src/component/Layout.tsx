@@ -1,18 +1,19 @@
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import {
     AppBar,
     Box,
     Container,
     CssBaseline,
-    Drawer, IconButton,
+    Drawer,
+    IconButton,
     List,
     ListItemButton,
     ListItemText,
     Toolbar,
     Typography
 } from '@mui/material';
-import AccountCircle from '@mui/icons-material/AccountCircle';
 import { Link, Outlet } from 'react-router-dom';
-import webEndpoint from '../util/endpoint/WebEndpoint.ts';
+import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
 
 
 const drawerWidth = 240;
@@ -26,7 +27,7 @@ const Layout = () => {
             <AppBar position="static" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
                 <Toolbar sx={{justifyContent: 'space-between'}}>
                     <Typography variant="h6" noWrap component="div">
-                        <Link to={webEndpoint.home} style={{ textDecoration: 'none', color: 'white' }}>
+                        <Link to={WEB_ENDPOINTS.home} style={{ textDecoration: 'none', color: 'white' }}>
                             {/* Logo + Nazwa aplikacji */}
                             PassGo
                         </Link>
@@ -60,7 +61,7 @@ const Layout = () => {
                     <Toolbar />
                     <Box sx={{ overflow: 'auto' }}>
                         <List>
-                            <ListItemButton component={Link} to={webEndpoint.transaction} >
+                            <ListItemButton component={Link} to={WEB_ENDPOINTS.transaction} >
                                 <ListItemText primary="Transactions" />
                             </ListItemButton>
                             {/* Dodaj kolejne przyciski w razie potrzeby */}
