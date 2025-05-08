@@ -10,6 +10,7 @@ import FaqPage from "./page/FaqPage.tsx";
 import WebEndpoints from "./util/endpoint/WebEndpoint.ts";
 import EventsPage from "./page/Events.tsx";
 
+
 const App = () => {
   return (
     <Routes>

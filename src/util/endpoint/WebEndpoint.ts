@@ -6,7 +6,7 @@ enum WebEndpoint {
     SIGNUP,
     HOME,
     FAQ,
-    EVENTS
+    EVENTS,
 }
 
 type Endpoints = {
@@ -18,7 +18,7 @@ const WebEndpoints: Endpoints = {
     signup: endpointCreator("/signup"),
     home: endpointCreator("/"),
     faq: endpointCreator("/faq"),
-    events: endpointCreator("/events")
+    events: endpointCreator("/events"),
 };
 
 function endpointCreator(endpoint: string): string {

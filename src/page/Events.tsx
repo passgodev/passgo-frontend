@@ -9,20 +9,45 @@ interface EventItem {
   name: string;
   date: string;
   description: string;
+  address: {
+    city: string;
+  };
+  imageUrl?: string;
 }
 
 const EventsPage = () => {
   const [events, setEvents] = useState<EventItem[]>([]);
 
   useEffect(() => {
-    fetch(ApiEndpoints.events)
-      .then((res) => res.json())
-      .then((data) => {
-        setEvents(data);
-      })
-      .catch((err) => {
+    const fetchEventsWithImages = async () => {
+      try {
+        const res = await fetch(ApiEndpoints.events);
+        const data: EventItem[] = await res.json();
+
+        const eventsWithImages = await Promise.all(
+          data.map(async (event) => {
+            try {
+              const imageRes = await fetch(
+                `${ApiEndpoints.events}/${event.id}/image`
+              );
+              if (!imageRes.ok) throw new Error("Image not found");
+              const blob = await imageRes.blob();
+              const imageUrl = URL.createObjectURL(blob);
+              return { ...event, imageUrl };
+            } catch (err) {
+              console.warn(`No image for event ${event.id}`, err);
+              return { ...event }; // bez imageUrl
+            }
+          })
+        );
+
+        setEvents(eventsWithImages);
+      } catch (err) {
         console.error("Error fetching events:", err);
-      });
+      }
+    };
+
+    fetchEventsWithImages();
   }, []);
 
   return (
@@ -34,6 +59,8 @@ const EventsPage = () => {
             title={event.name}
             date={event.date}
             description={event.description}
+            city={event.address.city}
+            imageUrl={event.imageUrl}
           />
         ))}
       </Box>
