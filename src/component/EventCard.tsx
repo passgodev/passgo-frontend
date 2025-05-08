@@ -62,7 +62,7 @@ const EventCard = ({
               src={imageUrl}
               alt={title}
               style={{
-                height: "270px",
+                height: "260px", //HARDCODE to trzeba zmienic ale za chuja nie wiem jak
                 width: "auto",
                 borderRadius: "4px",
                 objectFit: "cover",
