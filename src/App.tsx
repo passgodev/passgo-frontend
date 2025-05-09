@@ -12,8 +12,9 @@ import SignupPage from './page/signup/SignupPage.tsx';
 import TestOnlyAuthorized from './page/TestOnlyAuthorized.tsx';
 import Transaction from './page/transaction/Transaction.tsx';
 import UnauthorizedPage from './page/UnauthorizedPage.tsx';
+import FaqPage from './page/FaqPage.tsx';
+import AdminFaqPage from './page/AdminFaqPage.tsx';
 import WEB_ENDPOINTS from './util/endpoint/WebEndpoint.ts';
-
 
 const App = () => {
     return (
@@ -34,6 +35,8 @@ const App = () => {
                             <Route path={WEB_ENDPOINTS.transaction} element={<Transaction />} />
                             <Route path={WEB_ENDPOINTS.clientById} element={<ClientInfoPage />} />
                             <Route path={WEB_ENDPOINTS.activeMemberProfile} element={<ActiveMemberProfilePage />} />
+                            <Route path={WEB_ENDPOINTS.faq} element={<FaqPage />} />
+                            <Route path={WEB_ENDPOINTS.adminFaq} element={<AdminFaqPage />} />
                         </Route>
                     </Route>
                     <Route element={<RequireAuth allowedRoles={[Privilege.ADMINISTRATOR]} />} >
@@ -42,11 +45,10 @@ const App = () => {
                         </Route>
                     </Route>
                 </Route>
-
             </Route>
             <Route path='*' element={<PageNotFound />} />
         </Routes>
     );
-}
+};
 
 export default App;

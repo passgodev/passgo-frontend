@@ -1,5 +1,4 @@
-import { Endpoint } from './Endpoint.ts';
-
+import { Endpoint } from "./Endpoint.ts";
 
 const WEB_ENDPOINTS = {
     login: endpointCreator('/login'),
@@ -9,6 +8,8 @@ const WEB_ENDPOINTS = {
     unauthorized: endpointCreator('/unauthorized'),
     clientById: endpointCreator('/clients/:id'),
     activeMemberProfile: endpointCreator('/members/me'),
+    faq: endpointCreator("/faq"),
+    adminFaq: endpointCreator("/admin/faq"),
 }
 
 function endpointCreator(endpoint: string): Endpoint {

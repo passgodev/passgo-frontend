@@ -15,12 +15,17 @@ import {
 import { Link, Outlet } from 'react-router-dom';
 import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
 
-
 const drawerWidth = 240;
 
 const Layout = () => {
     return (
-        <Box sx={{ display: 'flex', minHeight: '100vh', flexDirection: 'column' }}>
+        <Box
+            sx={{
+                display: "flex",
+                minHeight: "100vh",
+                flexDirection: "column",
+            }}
+        >
             <CssBaseline />
 
             {/* AppBar: Górny pasek */}
@@ -45,7 +50,7 @@ const Layout = () => {
                 </Toolbar>
             </AppBar>
 
-            <Box sx={{ display: 'flex', flex: 1 }}>
+            <Box sx={{ display: "flex", flex: 1 }}>
                 {/* Drawer: Nawigacja boczna */}
                 <Drawer
                     variant="permanent"
@@ -54,15 +59,27 @@ const Layout = () => {
                         flexShrink: 0,
                         [`& .MuiDrawer-paper`]: {
                             width: drawerWidth,
-                            boxSizing: 'border-box',
+                            boxSizing: "border-box",
                         },
                     }}
                 >
                     <Toolbar />
-                    <Box sx={{ overflow: 'auto' }}>
+                    <Box sx={{ overflow: "auto" }}>
                         <List>
                             <ListItemButton component={Link} to={WEB_ENDPOINTS.transaction} >
                                 <ListItemText primary="Transactions" />
+                            </ListItemButton>
+                            <ListItemButton
+                                component={Link}
+                                to={WEB_ENDPOINTS.faq}
+                            >
+                                <ListItemText primary="FAQ" />
+                            </ListItemButton>
+                            <ListItemButton
+                                component={Link}
+                                to={WEB_ENDPOINTS.adminFaq}
+                            >
+                                <ListItemText primary="Admin FAQ" />
                             </ListItemButton>
                             {/* Dodaj kolejne przyciski w razie potrzeby */}
                         </List>
@@ -73,7 +90,7 @@ const Layout = () => {
                 <Box
                     component="main"
                     sx={{
-                        flexGrow: 1
+                        flexGrow: 1,
                     }}
                 >
                     <Container maxWidth={false} disableGutters={false}>
@@ -83,10 +100,16 @@ const Layout = () => {
             </Box>
 
             {/* Stopka */}
-            <Box component="footer" sx={{ py: 2, textAlign: 'right', backgroundColor: '#f5f5f5' }}>
-                <Typography variant="body2" color="text.secondary" sx={{marginRight: '20px'}}>
-                    {/* Placeholder dla stopki */}
-                    © 2025 PassGo
+            <Box
+                component="footer"
+                sx={{ py: 2, textAlign: "right", backgroundColor: "#f5f5f5" }}
+            >
+                <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    sx={{ marginRight: "20px" }}
+                >
+                    {/* Placeholder dla stopki */}© 2025 PassGo
                 </Typography>
             </Box>
         </Box>
