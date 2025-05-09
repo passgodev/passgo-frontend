@@ -7,6 +7,7 @@ import LoginPage from "./page/login/LoginPage.tsx";
 import SignupPage from "./page/signup/SignupPage.tsx";
 import Transaction from "./page/Transaction.tsx";
 import FaqPage from "./page/FaqPage.tsx";
+import AdminFaqPage from "./page/AdminFaqPage.tsx";
 import WebEndpoints from "./util/endpoint/WebEndpoint.ts";
 
 const App = () => {
@@ -29,6 +30,10 @@ const App = () => {
                             <Route
                                 path={WebEndpoints.faq}
                                 element={<FaqPage />}
+                            />
+                            <Route
+                                path={WebEndpoints.admin_faq}
+                                element={<AdminFaqPage />}
                             />
                         </Route>
                     </Route>

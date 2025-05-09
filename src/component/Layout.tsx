@@ -64,6 +64,12 @@ const Layout = () => {
                             >
                                 <ListItemText primary="FAQ" />
                             </ListItemButton>
+                            <ListItemButton
+                                component={Link}
+                                to={WebEndpoints.admin_faq}
+                            >
+                                <ListItemText primary="Admin FAQ" />
+                            </ListItemButton>
                             {/* Dodaj kolejne przyciski w razie potrzeby */}
                         </List>
                     </Box>
