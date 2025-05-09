@@ -1,4 +1,5 @@
 import { createContext, Dispatch, ReactNode, SetStateAction, useState } from "react";
+import Privilege from '../model/member/Privilege.ts';
 
 interface AuthProviderProps {
     children: ReactNode;
@@ -7,6 +8,7 @@ interface AuthProviderProps {
 interface Auth {
     token?: string,
     refreshToken?: string,
+    privilege?: Privilege
 }
 
 interface IAuthContext {

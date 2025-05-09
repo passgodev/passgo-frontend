@@ -2,8 +2,8 @@ import { TextField } from '@mui/material';
 import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import AlertContext from '../../../context/AlertProvider.tsx';
-import ApiEndpoints from '../../../util/endpoint/ApiEndpoint.ts';
-import WebEndpoints from '../../../util/endpoint/WebEndpoint.ts';
+import API_ENDPOINTS from '../../../util/endpoint/ApiEndpoint.ts';
+import WEB_ENDPOINTS from '../../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../../util/HttpMethod.ts';
 
 
@@ -35,7 +35,7 @@ const ClientSignupCredentialComponent = (props: {handleSubmit: (func: () => void
         headers.append('Content-Type', 'application/json');
 
         await fetch(
-            `${ApiEndpoints.signup}?member=client`,
+            `${API_ENDPOINTS.signup}?member=client`,
             {
                 method: HttpMethod.POST,
                 body: JSON.stringify(signupBody),
@@ -45,7 +45,7 @@ const ClientSignupCredentialComponent = (props: {handleSubmit: (func: () => void
             console.log('client signup response', res);
             if ( res.status === 200 ) {
                 showAlert(res.statusText, 'info');
-                navigate(WebEndpoints.login);
+                navigate(WEB_ENDPOINTS.login);
             }
         });
     }
