@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import EventCard from "../component/EventCard";
 import ApiEndpoints from "../util/endpoint/ApiEndpoint";
+import useInterceptedFetch from "../hook/useInterceptedFetch";
 
 interface EventItem {
   id: number;
@@ -18,17 +19,20 @@ interface EventItem {
 const EventsPage = () => {
   const [events, setEvents] = useState<EventItem[]>([]);
 
+  const InterceptedFetch = useInterceptedFetch();
+
+
   useEffect(() => {
     const fetchEventsWithImages = async () => {
       try {
-        const res = await fetch(ApiEndpoints.events);
+        const res = await InterceptedFetch({endpoint:ApiEndpoints.events});
         const data: EventItem[] = await res.json();
 
         const eventsWithImages = await Promise.all(
           data.map(async (event) => {
             try {
-              const imageRes = await fetch(
-                `${ApiEndpoints.events}/${event.id}/image`
+              const imageRes = await InterceptedFetch(
+                {endpoint:`${ApiEndpoints.events}/${event.id}/image`}
               );
               if (!imageRes.ok) throw new Error("Image not found");
               const blob = await imageRes.blob();

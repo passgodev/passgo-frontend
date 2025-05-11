@@ -11,7 +11,7 @@ const WEB_ENDPOINTS = {
     faq: endpointCreator("/faq"),
     adminFaq: endpointCreator("/admin/faq"),
     adminClientList: endpointCreator('/admin/members/client'),
-    adminOrganizerList: endpointCreator('/admin/members/organizer')
+    adminOrganizerList: endpointCreator('/admin/members/organizer'),
     events: endpointCreator("/events")
 }
 
