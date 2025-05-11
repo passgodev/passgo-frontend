@@ -3,8 +3,8 @@ interface ClientDto {
     firstName: string,
     lastName: string,
     email: string,
-    registrationDate: Date
-    birthDate: Date
+    registrationDate: Date,
+    birthDate: Date,
     isActive: boolean
 }
 
