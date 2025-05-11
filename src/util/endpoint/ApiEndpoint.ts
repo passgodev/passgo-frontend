@@ -8,7 +8,8 @@ const API_ENDPOINTS = {
     login: endpointCreator('/auth/login'),
     refresh: endpointCreator('/auth/refresh'),
     transactions: endpointCreator('/transactions'),
-    faq: endpointCreator('/faqs'),
+    faq: endpointCreator("/faqs"),
+    members: endpointCreator('/members?type=:memberType'),
     events: endpoinCreator('/events')
 }
 

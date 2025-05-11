@@ -1,11 +1,12 @@
-interface ClientDto {
+interface OrganizerDto {
     id: number
     firstName: string,
     lastName: string,
     email: string,
     registrationDate: Date,
     birthDate: Date,
-    isActive: boolean
+    isActive: boolean,
+    organizationName: string
 }
 
-export default ClientDto;
+export default OrganizerDto;

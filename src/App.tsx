@@ -3,19 +3,21 @@ import Layout from './component/Layout.tsx';
 import PersistLogin from './component/PersistLogin.tsx';
 import RequireAuth from './component/RequireAuth.tsx';
 import Privilege from './model/member/Privilege.ts';
+import AdminFaqPage from './page/AdminFaqPage.tsx';
+import FaqPage from './page/FaqPage.tsx';
 import Home from './page/Home.tsx';
 import LoginPage from './page/login/LoginPage.tsx';
 import ActiveMemberProfilePage from './page/member/ActiveMemberProfilePage.tsx';
+import AdminClientListPage from './page/member/AdminClientListPage.tsx';
+import AdminOrganizerListPage from './page/member/AdminOrganizerListPage.tsx';
 import ClientInfoPage from './page/member/client/ClientInfoPage.tsx';
 import PageNotFound from './page/PageNotFound.tsx';
 import SignupPage from './page/signup/SignupPage.tsx';
-import TestOnlyAuthorized from './page/TestOnlyAuthorized.tsx';
 import Transaction from './page/transaction/Transaction.tsx';
 import UnauthorizedPage from './page/UnauthorizedPage.tsx';
-import FaqPage from './page/FaqPage.tsx';
-import AdminFaqPage from './page/AdminFaqPage.tsx';
 import WEB_ENDPOINTS from './util/endpoint/WebEndpoint.ts';
 import EventsPage from "./page/Events.tsx";
+
 
 const App = () => {
     return (
@@ -43,7 +45,8 @@ const App = () => {
                     </Route>
                     <Route element={<RequireAuth allowedRoles={[Privilege.ADMINISTRATOR]} />} >
                         <Route element={<Layout />} >
-                            <Route path='testauthorize' element={<TestOnlyAuthorized/>} />
+                            <Route path={WEB_ENDPOINTS.adminClientList} element={<AdminClientListPage />} />
+                            <Route path={WEB_ENDPOINTS.adminOrganizerList} element={<AdminOrganizerListPage />} />
                         </Route>
                     </Route>
                 </Route>
