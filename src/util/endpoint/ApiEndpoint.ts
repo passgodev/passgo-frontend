@@ -10,7 +10,9 @@ const API_ENDPOINTS = {
     transactions: endpointCreator('/transactions'),
     faq: endpointCreator("/faqs"),
     members: endpointCreator('/members?type=:memberType'),
+    events: endpoinCreator('/events')
 }
+
 
 function endpointCreator(endpoint: string): Endpoint {
     return API_PREFIX + endpoint;
