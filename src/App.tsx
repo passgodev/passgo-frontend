@@ -15,6 +15,7 @@ import UnauthorizedPage from './page/UnauthorizedPage.tsx';
 import FaqPage from './page/FaqPage.tsx';
 import AdminFaqPage from './page/AdminFaqPage.tsx';
 import WEB_ENDPOINTS from './util/endpoint/WebEndpoint.ts';
+import EventsPage from "./page/Events.tsx";
 
 const App = () => {
     return (
@@ -37,6 +38,7 @@ const App = () => {
                             <Route path={WEB_ENDPOINTS.activeMemberProfile} element={<ActiveMemberProfilePage />} />
                             <Route path={WEB_ENDPOINTS.faq} element={<FaqPage />} />
                             <Route path={WEB_ENDPOINTS.adminFaq} element={<AdminFaqPage />} />
+                            <Route path={WEB_ENDPOINTS.events} element={<EventsPage />} />
                         </Route>
                     </Route>
                     <Route element={<RequireAuth allowedRoles={[Privilege.ADMINISTRATOR]} />} >

@@ -10,6 +10,7 @@ const WEB_ENDPOINTS = {
     activeMemberProfile: endpointCreator('/members/me'),
     faq: endpointCreator("/faq"),
     adminFaq: endpointCreator("/admin/faq"),
+    events: endpointCreator("/events")
 }
 
 function endpointCreator(endpoint: string): Endpoint {

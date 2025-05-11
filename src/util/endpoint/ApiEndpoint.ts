@@ -8,8 +8,10 @@ const API_ENDPOINTS = {
     login: endpointCreator('/auth/login'),
     refresh: endpointCreator('/auth/refresh'),
     transactions: endpointCreator('/transactions'),
-    faq: endpointCreator("/faqs"),
+    faq: endpointCreator('/faqs'),
+    events: endpoinCreator('/events')
 }
+
 
 function endpointCreator(endpoint: string): Endpoint {
     return API_PREFIX + endpoint;
