@@ -1,28 +1,20 @@
 import { Endpoint } from "./Endpoint.ts";
 
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-enum WebEndpoint {
-    LOGIN,
-    SIGNUP,
-    HOME,
-    FAQ,
-    EVENTS,
+const WEB_ENDPOINTS = {
+    login: endpointCreator('/login'),
+    signup: endpointCreator('/signup'),
+    home: endpointCreator('/'),
+    transaction: endpointCreator('/transaction'),
+    unauthorized: endpointCreator('/unauthorized'),
+    clientById: endpointCreator('/clients/:id'),
+    activeMemberProfile: endpointCreator('/members/me'),
+    faq: endpointCreator("/faq"),
+    adminFaq: endpointCreator("/admin/faq"),
+    events: endpointCreator("/events")
 }
 
-type Endpoints = {
-    readonly [key in keyof typeof WebEndpoint as Lowercase<key>]: Endpoint;
-};
-
-const WebEndpoints: Endpoints = {
-    login: endpointCreator("/login"),
-    signup: endpointCreator("/signup"),
-    home: endpointCreator("/"),
-    faq: endpointCreator("/faq"),
-    events: endpointCreator("/events"),
-};
-
-function endpointCreator(endpoint: string): string {
+function endpointCreator(endpoint: string): Endpoint {
     return endpoint;
 }
 
-export default WebEndpoints;
+export default WEB_ENDPOINTS;

@@ -1,17 +1,19 @@
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import {
     AppBar,
     Box,
     Container,
     CssBaseline,
     Drawer,
+    IconButton,
     List,
     ListItemButton,
     ListItemText,
     Toolbar,
-    Typography,
-} from "@mui/material";
-import { Link, Outlet } from "react-router-dom";
-import WebEndpoints from "../util/endpoint/WebEndpoint";
+    Typography
+} from '@mui/material';
+import { Link, Outlet } from 'react-router-dom';
+import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
 
 const drawerWidth = 240;
 
@@ -27,15 +29,24 @@ const Layout = () => {
             <CssBaseline />
 
             {/* AppBar: Górny pasek */}
-            <AppBar
-                position="static"
-                sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}
-            >
-                <Toolbar>
+            <AppBar position="static" sx={{ zIndex: (theme) => theme.zIndex.drawer + 1 }}>
+                <Toolbar sx={{justifyContent: 'space-between'}}>
                     <Typography variant="h6" noWrap component="div">
-                        {/* Logo + Nazwa aplikacji */}
-                        PassGo
+                        <Link to={WEB_ENDPOINTS.home} style={{ textDecoration: 'none', color: 'white' }}>
+                            {/* Logo + Nazwa aplikacji */}
+                            PassGo
+                        </Link>
                     </Typography>
+                    <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        component={Link} to='/members/me'
+                    >
+                        <AccountCircle />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
 
@@ -55,24 +66,30 @@ const Layout = () => {
                     <Toolbar />
                     <Box sx={{ overflow: "auto" }}>
                         <List>
-                            <ListItemButton component={Link} to="/transaction">
+                            <ListItemButton component={Link} to={WEB_ENDPOINTS.transaction} >
                                 <ListItemText primary="Transactions" />
                             </ListItemButton>
 
                             <ListItemButton
                                 component={Link}
-                                to={WebEndpoints.faq}
+                                to={WEB_ENDPOINTS.faq}
                             >
                                 <ListItemText primary="FAQ" />
                             </ListItemButton>
 
                             <ListItemButton
                                 component={Link}
-                                to={WebEndpoints.events}
+                                to={WEB_ENDPOINTS.events}
                             >
                                 <ListItemText primary="Events" />
                             </ListItemButton>
 
+                            <ListItemButton
+                                component={Link}
+                                to={WEB_ENDPOINTS.adminFaq}
+                            >
+                                <ListItemText primary="Admin FAQ" />
+                            </ListItemButton>
                             {/* Dodaj kolejne przyciski w razie potrzeby */}
                         </List>
                     </Box>
