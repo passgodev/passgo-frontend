@@ -2,6 +2,7 @@ import AccountCircle from '@mui/icons-material/AccountCircle';
 import {
     AppBar,
     Box,
+    Collapse,
     Container,
     CssBaseline,
     Drawer,
@@ -12,12 +13,22 @@ import {
     Toolbar,
     Typography
 } from '@mui/material';
+import { useState } from 'react';
 import { Link, Outlet } from 'react-router-dom';
 import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
+import ExpandLessIcon from '@mui/icons-material/ExpandLess';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 
 const drawerWidth = 240;
 
 const Layout = () => {
+    const [open, setOpen] = useState(false);
+
+    const handleClick = () => {
+        setOpen(!open);
+    };
+
     return (
         <Box
             sx={{
@@ -81,10 +92,22 @@ const Layout = () => {
                             >
                                 <ListItemText primary="Admin FAQ" />
                             </ListItemButton>
-                            <ListItemButton component={Link} to={WEB_ENDPOINTS.adminMemberList} >
+                            <ListItemButton onClick={handleClick} >
                                 <ListItemText primary="Members" />
+                                {open ? <ExpandLessIcon /> : <ExpandMoreIcon />}
+                                {/*to different component*/}
                             </ListItemButton>
                             {/* Dodaj kolejne przyciski w razie potrzeby */}
+                            <Collapse in={open} timeout="auto" unmountOnExit>
+                                <List component="div">
+                                    <ListItemButton sx={{ pl: 4 }} component={Link} to={WEB_ENDPOINTS.adminClientList}>
+                                        <ListItemText primary="Clients" />
+                                    </ListItemButton>
+                                    <ListItemButton sx={{ pl: 4 }} component={Link} to={WEB_ENDPOINTS.adminOrganizerList}>
+                                        <ListItemText primary="Organizers" />
+                                    </ListItemButton>
+                                </List>
+                            </Collapse>
                         </List>
                     </Box>
                 </Drawer>

@@ -8,7 +8,8 @@ import FaqPage from './page/FaqPage.tsx';
 import Home from './page/Home.tsx';
 import LoginPage from './page/login/LoginPage.tsx';
 import ActiveMemberProfilePage from './page/member/ActiveMemberProfilePage.tsx';
-import AdminMemberListPage from './page/member/AdminMemberListPage.tsx';
+import AdminClientListPage from './page/member/AdminClientListPage.tsx';
+import AdminOrganizerListPage from './page/member/AdminOrganizerListPage.tsx';
 import ClientInfoPage from './page/member/client/ClientInfoPage.tsx';
 import PageNotFound from './page/PageNotFound.tsx';
 import SignupPage from './page/signup/SignupPage.tsx';
@@ -42,7 +43,8 @@ const App = () => {
                     </Route>
                     <Route element={<RequireAuth allowedRoles={[Privilege.ADMINISTRATOR]} />} >
                         <Route element={<Layout />} >
-                            <Route path={WEB_ENDPOINTS.adminMemberList} element={<AdminMemberListPage />} />
+                            <Route path={WEB_ENDPOINTS.adminClientList} element={<AdminClientListPage />} />
+                            <Route path={WEB_ENDPOINTS.adminOrganizerList} element={<AdminOrganizerListPage />} />
                         </Route>
                     </Route>
                 </Route>
