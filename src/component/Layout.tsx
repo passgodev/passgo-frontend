@@ -13,8 +13,10 @@ import {
     Typography
 } from '@mui/material';
 import { Link, Outlet } from 'react-router-dom';
+import Privilege from '../model/member/Privilege.ts';
 import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
 import ButtonCollapseList from './ButtonCollapseList.tsx';
+import EnableOnRole from './EnableOnRole.tsx';
 
 
 const drawerWidth = 240;
@@ -71,19 +73,24 @@ const Layout = () => {
                             <ListItemButton component={Link} to={WEB_ENDPOINTS.transaction} >
                                 <ListItemText primary="Transactions" />
                             </ListItemButton>
-                            <ListItemButton
-                                component={Link}
-                                to={WEB_ENDPOINTS.faq}
-                            >
+                            <ListItemButton component={Link} to={WEB_ENDPOINTS.faq} >
                                 <ListItemText primary="FAQ" />
                             </ListItemButton>
-                            <ListItemButton
-                                component={Link}
-                                to={WEB_ENDPOINTS.adminFaq}
-                            >
-                                <ListItemText primary="Admin FAQ" />
-                            </ListItemButton>
-                            <ButtonCollapseList />
+                            <EnableOnRole allowedRoles={[Privilege.ADMINISTRATOR]}>
+                                <ListItemButton component={Link} to={WEB_ENDPOINTS.adminFaq} >
+                                    <ListItemText primary="Admin FAQ" />
+                                </ListItemButton>
+                            </EnableOnRole>
+                            <EnableOnRole allowedRoles={[Privilege.ADMINISTRATOR]}>
+                                <ButtonCollapseList name='Members'>
+                                        <ListItemButton sx={{ pl: 4 }} component={Link} to={WEB_ENDPOINTS.adminClientList}>
+                                            <ListItemText primary="Clients" />
+                                        </ListItemButton>
+                                        <ListItemButton sx={{ pl: 4 }} component={Link} to={WEB_ENDPOINTS.adminOrganizerList}>
+                                            <ListItemText primary="Organizers" />
+                                        </ListItemButton>
+                                </ButtonCollapseList>
+                            </EnableOnRole>
                         </List>
                     </Box>
                 </Drawer>
