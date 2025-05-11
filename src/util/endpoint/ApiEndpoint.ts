@@ -9,6 +9,7 @@ const API_ENDPOINTS = {
     refresh: endpointCreator('/auth/refresh'),
     transactions: endpointCreator('/transactions'),
     faq: endpointCreator("/faqs"),
+    members: endpointCreator('/members?type=:memberType'),
 }
 
 function endpointCreator(endpoint: string): Endpoint {
