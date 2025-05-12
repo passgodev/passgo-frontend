@@ -1,7 +1,9 @@
+import ClientInfoPage from './client/ClientInfoPage.tsx';
+
 
 const ActiveMemberProfilePage = () => {
     return (
-        <div>ActiveMemberProfile</div>
+        <ClientInfoPage />
     );
 };
 export default ActiveMemberProfilePage;
