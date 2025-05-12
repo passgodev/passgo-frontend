@@ -1,7 +1,8 @@
+import { Box } from '@mui/material';
 import { useParams } from 'react-router-dom';
 import MemberInformationComponent from '../../../component/member/MemberInformationComponent.tsx';
 import LatestTransactionsComponent from '../../../component/transaction/LatestTransactionsComponent.tsx';
-import CardWrapperComponent from '../CardWrapperComponent.tsx';
+
 
 const user = {
     firstName: 'Jan',
@@ -23,13 +24,13 @@ const ClientInfoPage = () => {
     console.log('client info page params', params);
 
     return (
-        <CardWrapperComponent>
+        <Box>
             {/* Sekcja: O użytkowniku */}
             <MemberInformationComponent member={{...user}} />
 
             {/* Sekcja: Ostatnie transakcje */}
             <LatestTransactionsComponent transactions={user.transactions} />
-        </CardWrapperComponent>
+        </Box>
     );
 };
 export default ClientInfoPage;
