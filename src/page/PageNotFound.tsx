@@ -1,31 +1,16 @@
-import { Box, Card, CssBaseline, Divider, Typography } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import FallbackCard from '../component/page/FallbackCard.tsx';
 import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
 
 
 const PageNotFound = () => {
+    const navigate = useNavigate();
+
     return (
-        <Box display={'flex'} justifyContent={'center'} alignItems={'center'} sx={{bgcolor: 'primary.main', width: '100vw', height: '100vh', m: 0, p: 0}}>
-            <CssBaseline />
-            <Card sx={{ p: 8 }}>
-                <Typography color='primary' variant='h2'>
-                    Passgo
-                </Typography>
-                <Divider sx={{ mb: 2 }} />
-                <Typography align='center' variant='h5' noWrap>
-                    Page Not Found
-                </Typography>
-                <Box display='flex' justifyContent={'center'}>
-                    <Typography noWrap>
-                        Return To {
-                            <Typography component={Link} to={WEB_ENDPOINTS.home}>
-                                Home Page
-                            </Typography>
-                        }
-                    </Typography>
-                </Box>
-            </Card>
-        </Box>
+        <FallbackCard title='Page Not Found' navigateTo={{
+            name: 'Home Page',
+            callback: () => navigate(WEB_ENDPOINTS.home)
+        }} />
     );
 };
 export default PageNotFound;
