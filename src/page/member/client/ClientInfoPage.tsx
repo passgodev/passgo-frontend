@@ -1,36 +1,40 @@
-import { Box } from '@mui/material';
+import { useContext, useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import MemberInformationComponent from '../../../component/member/MemberInformationComponent.tsx';
-import LatestTransactionsComponent from '../../../component/transaction/LatestTransactionsComponent.tsx';
+import AlertContext from '../../../context/AlertProvider.tsx';
+import useInterceptedFetch from '../../../hook/useInterceptedFetch.ts';
+import ClientDto from '../../../model/client/ClientDto.ts';
+import MemberType from '../../../model/member/MemberType.ts';
+import API_ENDPOINTS from '../../../util/endpoint/ApiEndpoint.ts';
+import ClientInfoComponent from './ClientInfoComponent.tsx';
 
-
-const user = {
-    firstName: 'Jan',
-    lastName: 'Kowalski',
-    role: 'administrator',
-    age: 30,
-    address: 'ul. Kwiatowa 15, 00-123 Warszawa',
-    avatar: 'https://i.pravatar.cc/150?img=3',
-    transactions: [
-        { id: 'TXN123', amount: '150.00 PLN', date: '2024-05-10' },
-        { id: 'TXN122', amount: '89.99 PLN', date: '2024-05-07' },
-        { id: 'TXN121', amount: '240.50 PLN', date: '2024-05-01' },
-    ],
-};
 
 const ClientInfoPage = () => {
     const params = useParams();
+    console.log('ClientInfoPage', params)
+    const interceptedFetch = useInterceptedFetch();
+    const { showAlert } = useContext(AlertContext);
+    const [client, setClient] = useState<ClientDto>();
 
-    console.log('client info page params', params);
+    useEffect(() => {
+        const endpoint = API_ENDPOINTS.memberById
+            .replace(':id', params.id ?? '-1')
+            .replace(':memberType', MemberType[MemberType.CLIENT]);
+        console.log('ClientInfoPage - useEffect invoked', 'endpoint', endpoint);
+
+        interceptedFetch({endpoint})
+            .then(res => res.json())
+            .then(json => {
+                console.log('ClientInfoPage - returned json', json);
+                setClient(json)
+            })
+            .catch(err => {
+                console.log('ClientInfoPage - err', err)
+                showAlert(err, 'error');
+            });
+    }, []);
 
     return (
-        <Box>
-            {/* Sekcja: O użytkowniku */}
-            <MemberInformationComponent member={{...user}} />
-
-            {/* Sekcja: Ostatnie transakcje */}
-            <LatestTransactionsComponent transactions={user.transactions} />
-        </Box>
+        <ClientInfoComponent client={client!} />
     );
 };
 export default ClientInfoPage;
