@@ -35,52 +35,19 @@ const App = () => {
                     {/* member with no set role(memberType) can access */}
                     <Route element={<RequireAuth />}>
                         <Route element={<Layout />}>
-                            <Route
-                                path={WEB_ENDPOINTS.home}
-                                element={<Home />}
-                            />
-                            <Route
-                                path={WEB_ENDPOINTS.transaction}
-                                element={<Transaction />}
-                            />
-                            <Route
-                                path={WEB_ENDPOINTS.clientById}
-                                element={<ClientInfoPage />}
-                            />
-                            <Route
-                                path={WEB_ENDPOINTS.activeMemberProfile}
-                                element={<ActiveMemberProfilePage />}
-                            />
-                            <Route
-                                path={WEB_ENDPOINTS.faq}
-                                element={<FaqPage />}
-                            />
-                            <Route
-                                path={WEB_ENDPOINTS.events}
-                                element={<EventsPage />}
-                            />
+                            <Route path={WEB_ENDPOINTS.home} element={<Home />} />
+                            <Route path={WEB_ENDPOINTS.transaction} element={<Transaction />} />
+                            <Route path={WEB_ENDPOINTS.clientById} element={<ClientInfoPage />} />
+                            <Route path={WEB_ENDPOINTS.activeMemberProfile} element={<ActiveMemberProfilePage />} />
+                            <Route path={WEB_ENDPOINTS.faq} element={<FaqPage />} />
+                            <Route path={WEB_ENDPOINTS.events} element={<EventsPage />} />
                         </Route>
                     </Route>
-                    <Route
-                        element={
-                            <RequireAuth
-                                allowedRoles={[Privilege.ADMINISTRATOR]}
-                            />
-                        }
-                    >
+                    <Route element={<RequireAuth allowedRoles={[Privilege.ADMINISTRATOR]} />}>
                         <Route element={<Layout />}>
-                            <Route
-                                path={WEB_ENDPOINTS.adminFaq}
-                                element={<AdminFaqPage />}
-                            />
-                            <Route
-                                path={WEB_ENDPOINTS.adminClientList}
-                                element={<AdminClientListPage />}
-                            />
-                            <Route
-                                path={WEB_ENDPOINTS.adminOrganizerList}
-                                element={<AdminOrganizerListPage />}
-                            />
+                            <Route path={WEB_ENDPOINTS.adminFaq} element={<AdminFaqPage />} />
+                            <Route path={WEB_ENDPOINTS.adminClientList} element={<AdminClientListPage />} />
+                            <Route path={WEB_ENDPOINTS.adminOrganizerList} element={<AdminOrganizerListPage />} />
                         </Route>
                     </Route>
                 </Route>
