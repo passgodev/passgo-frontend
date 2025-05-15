@@ -5,6 +5,7 @@ import Faq from "../interface/FaqInterface";
 import AdminFaqListItem from "../component/AdminFaqListItem";
 import AdminFaqDialog from "../component/AdminFaqDialog";
 import AdminDeleteConfirmDialog from "../component/AdminDeleteConfirmDialog";
+import useInterceptedFetch from "../hook/useInterceptedFetch";
 
 const AdminFaqPage = () => {
     const [faqs, setFaqs] = useState<Faq[]>([]);
@@ -18,8 +19,10 @@ const AdminFaqPage = () => {
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
     const [faqToDelete, setFaqToDelete] = useState<Faq | null>(null);
 
+    const fetch = useInterceptedFetch();
+
     const fetchFaqs = () => {
-        fetch(`${ApiEndpoints.faq}?page=${page}&size=${pageSize}`)
+        fetch({ endpoint: `${ApiEndpoints.faq}?page=${page}&size=${pageSize}` })
             .then((res) => res.json())
             .then((data) => {
                 setFaqs(data.content);
@@ -44,10 +47,13 @@ const AdminFaqPage = () => {
             answer: editFaq?.answer,
         };
 
-        fetch(url, {
-            method,
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload),
+        fetch({
+            endpoint: url,
+            reqInit: {
+                method,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload),
+            },
         }).then(() => {
             setOpenDialog(false);
             fetchFaqs();
@@ -56,8 +62,11 @@ const AdminFaqPage = () => {
 
     const handleDelete = () => {
         if (!faqToDelete) return;
-        fetch(`${ApiEndpoints.faq}/${faqToDelete.id}`, {
-            method: "DELETE",
+        fetch({
+            endpoint: `${ApiEndpoints.faq}/${faqToDelete.id}`,
+            reqInit: {
+                method: "DELETE",
+            },
         }).then(() => {
             setOpenDeleteDialog(false);
             setPage(0); // Reset to first page in case item was last

@@ -11,6 +11,7 @@ import {
 import { useEffect, useState } from "react";
 import FAQ from "../component/FAQ";
 import ApiEndpoints from "../util/endpoint/ApiEndpoint";
+import useInterceptedFetch from "../hook/useInterceptedFetch";
 
 export interface FaqItem {
     id: number;
@@ -25,9 +26,11 @@ const FaqPage = () => {
     const [totalPages, setTotalPages] = useState(0);
     const [pageSize, setPageSize] = useState(4);
 
+    const fetch = useInterceptedFetch();
+
     useEffect(() => {
         const url = `${ApiEndpoints.faq}?page=${page}&size=${pageSize}`;
-        fetch(url)
+        fetch({ endpoint: url })
             .then((res) => res.json())
             .then((data) => {
                 const faqsWithOpen = data.content.map((faq: any) => ({
