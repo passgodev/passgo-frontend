@@ -5,11 +5,11 @@ import {
     DialogActions,
     Button,
 } from "@mui/material";
-import Faq from "../interface/FaqInterface";
+import FaqDto from "../model/faq/FaqDto.ts";
 
 interface Props {
     open: boolean;
-    faq: Faq | null;
+    faq: FaqDto | null;
     onCancel: () => void;
     onConfirm: () => void;
 }

@@ -1,7 +1,7 @@
 import { Typography, Paper, Button, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import ApiEndpoints from "../util/endpoint/ApiEndpoint";
-import Faq from "../interface/FaqInterface";
+import Faq from "../model/faq/FaqInterface.ts";
 import AdminFaqListItem from "../component/AdminFaqListItem";
 import AdminFaqDialog from "../component/AdminFaqDialog";
 import AdminDeleteConfirmDialog from "../component/AdminDeleteConfirmDialog";
