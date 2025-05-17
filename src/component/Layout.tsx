@@ -18,7 +18,6 @@ import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
 import ButtonCollapseList from './ButtonCollapseList.tsx';
 import EnableOnRole from './EnableOnRole.tsx';
 
-
 const drawerWidth = 240;
 
 const Layout = () => {
@@ -83,6 +82,10 @@ const Layout = () => {
                                 to={WEB_ENDPOINTS.events}
                             >
                                 <ListItemText primary="Events" />
+                            </ListItemButton>
+
+                            <ListItemButton component={Link} to={WEB_ENDPOINTS.building} >
+                                <ListItemText primary="Building" />
                             </ListItemButton>
         
                             <EnableOnRole allowedRoles={[Privilege.ADMINISTRATOR]}>

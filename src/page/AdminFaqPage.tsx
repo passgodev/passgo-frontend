@@ -1,23 +1,23 @@
 import { Typography, Paper, Button, Box } from "@mui/material";
 import { useEffect, useState } from "react";
 import ApiEndpoints from "../util/endpoint/ApiEndpoint";
-import Faq from "../model/faq/FaqInterface.ts";
+import FaqDto from "../model/faq/FaqDto.ts";
 import AdminFaqListItem from "../component/AdminFaqListItem";
 import AdminFaqDialog from "../component/AdminFaqDialog";
 import AdminDeleteConfirmDialog from "../component/AdminDeleteConfirmDialog";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
 
 const AdminFaqPage = () => {
-    const [faqs, setFaqs] = useState<Faq[]>([]);
+    const [faqs, setFaqs] = useState<FaqDto[]>([]);
     const [page, setPage] = useState(0);
     const [pageSize] = useState(3);
     const [totalPages, setTotalPages] = useState(0);
 
     const [openDialog, setOpenDialog] = useState(false);
-    const [editFaq, setEditFaq] = useState<Partial<Faq> | null>(null);
+    const [editFaq, setEditFaq] = useState<Partial<FaqDto> | null>(null);
 
     const [openDeleteDialog, setOpenDeleteDialog] = useState(false);
-    const [faqToDelete, setFaqToDelete] = useState<Faq | null>(null);
+    const [faqToDelete, setFaqToDelete] = useState<FaqDto | null>(null);
 
     const fetch = useInterceptedFetch();
 
