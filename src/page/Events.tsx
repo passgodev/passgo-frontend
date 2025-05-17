@@ -65,6 +65,7 @@ const EventsPage = () => {
             description={event.description}
             city={event.address.city}
             imageUrl={event.imageUrl}
+            id={event.id}
           />
         ))}
       </Box>
