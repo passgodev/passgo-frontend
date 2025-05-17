@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { Typography, Box, CircularProgress, Button } from "@mui/material";
+import { useNavigate } from "react-router-dom";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
 import API_ENDPOINTS from "../util/endpoint/ApiEndpoint";
 
@@ -39,6 +40,7 @@ const EventDetailsPage = () => {
   const [event, setEvent] = useState<EventDetails | null>(null);
   const [loading, setLoading] = useState(true);
   const InterceptedFetch = useInterceptedFetch();
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchEvent = async () => {
@@ -169,6 +171,7 @@ const EventDetailsPage = () => {
               backgroundImage: "linear-gradient(45deg,rgb(128, 228, 250),rgb(81, 107, 255))", // Zmiana gradientu przy hover
             },
           }}
+          onClick={() => navigate(`/events/${id}/buy`)}
         >
           Buy tickets
         </Button>
