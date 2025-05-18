@@ -1,13 +1,12 @@
 import { Auth } from '../context/AuthProvider.tsx';
-import { retrieveMemberId, transferMemberTypeToPrivilege } from '../util/AccessTokenUtil.ts';
 import ApiEndpoint from '../util/endpoint/ApiEndpoint.ts';
 import HttpMethod from '../util/HttpMethod.ts';
 import useAuth from './useAuth';
 
 
 interface RefreshResponse {
-    refreshToken: string;
-    token: string;
+    refreshToken?: string;
+    token?: string;
 }
 
 const UseRefreshToken = () => {
@@ -31,23 +30,20 @@ const UseRefreshToken = () => {
 
             if ( res.status === 200 ) {
                 return JSON.parse(text) as RefreshResponse;
+            } else {
+                return {
+                    token: undefined,
+                    refreshToken: refreshToken,
+                } as RefreshResponse;
             }
-            throw 'useRefreshTokenError';
         });
 
         setAuth(prev => {
             console.log('prev auth - useRefreshToken', JSON.stringify(prev));
             console.log('response auth - useRefreshToken', JSON.stringify(response));
-
-            const token = response.token;
-            const privilege = transferMemberTypeToPrivilege(token);
-            const memberId = retrieveMemberId(token);
-
             return {
                 ...prev,
-                privilege,
-                memberId,
-                token
+                token: response.token
             } as Auth;
         });
 

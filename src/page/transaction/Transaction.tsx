@@ -66,7 +66,7 @@ const Transaction = () => {
     }
 
     return (
-        <Box sx={{p: 3, tableLayout: "fixed"}} width='100%' minWidth='60vw' display="table" >
+        <Box>
             {
                 transactionError !== ''
                     ? <Typography>Error</Typography>
