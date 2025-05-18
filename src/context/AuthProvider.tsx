@@ -6,7 +6,6 @@ interface AuthProviderProps {
 }
 
 interface Auth {
-    memberId?: string,
     token?: string,
     refreshToken?: string,
     privilege?: Privilege
