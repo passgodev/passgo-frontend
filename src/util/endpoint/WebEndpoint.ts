@@ -3,6 +3,7 @@ import { Endpoint } from "./Endpoint.ts";
 const WEB_ENDPOINTS = {
     login: endpointCreator('/login'),
     signup: endpointCreator('/signup'),
+    logout: endpointCreator('/logout'),
     home: endpointCreator('/'),
     transaction: endpointCreator('/transaction'),
     unauthorized: endpointCreator('/unauthorized'),
