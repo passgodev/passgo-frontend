@@ -124,7 +124,7 @@ const TicketPurchasePage = () => {
 
     try {
       const res = await InterceptedFetch({
-        endpoint: API_ENDPOINTS.purchaseTickets,
+        endpoint: WEB_ENDPOINTS.purchaseTickets,
         reqInit: {
           method: "POST",
           headers: { "Content-Type": "application/json" },
