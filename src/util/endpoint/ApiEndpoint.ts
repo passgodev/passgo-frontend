@@ -11,7 +11,9 @@ const API_ENDPOINTS = {
     faq: endpointCreator("/faqs"),
     members: endpointCreator('/members?type=:memberType'),
     memberById: endpointCreator('/members/:id?type=:memberType'),
-    events: endpointCreator('/events')
+    events: endpointCreator('/events'),
+    buildings: endpointCreator('/buildings'),
+    buyTickets: endpointCreator('/tickets/purchase')
 }
 
 

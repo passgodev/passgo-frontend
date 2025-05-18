@@ -54,6 +54,39 @@ const Layout = () => {
                     </IconButton>
                 </Toolbar>
             </AppBar>
+                            <ListItemButton component={Link} to={WEB_ENDPOINTS.faq} >
+                                <ListItemText primary="FAQ" />
+                            </ListItemButton>
+                             
+                            <ListItemButton
+                                component={Link}
+                                to={WEB_ENDPOINTS.events}
+                            >
+                                <ListItemText primary="Events" />
+                            </ListItemButton>
+
+                            <ListItemButton component={Link} to={WEB_ENDPOINTS.building} >
+                                <ListItemText primary="Building" />
+                            </ListItemButton>
+        
+                            <EnableOnRole allowedRoles={[Privilege.ADMINISTRATOR]}>
+                                <ListItemButton component={Link} to={WEB_ENDPOINTS.adminFaq} >
+                                    <ListItemText primary="Admin FAQ" />
+                                </ListItemButton>
+                            </EnableOnRole>
+                            <EnableOnRole allowedRoles={[Privilege.ADMINISTRATOR]}>
+                                <ButtonCollapseList name='Members'>
+                                        <ListItemButton sx={{ pl: 4 }} component={Link} to={WEB_ENDPOINTS.adminClientList}>
+                                            <ListItemText primary="Clients" />
+                                        </ListItemButton>
+                                        <ListItemButton sx={{ pl: 4 }} component={Link} to={WEB_ENDPOINTS.adminOrganizerList}>
+                                            <ListItemText primary="Organizers" />
+                                        </ListItemButton>
+                                </ButtonCollapseList>
+                            </EnableOnRole>
+                        </List>
+                    </Box>
+                </Drawer>
 
             <Box sx={{ display: "flex", flex: 1 }}>
                 {/* Drawer: Nawigacja boczna */}
