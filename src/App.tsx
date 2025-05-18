@@ -19,6 +19,8 @@ import WEB_ENDPOINTS from "./util/endpoint/WebEndpoint.ts";
 import EventsPage from "./page/Events.tsx";
 import AddBuildingPage from "./page/AddBuilding.tsx";
 import BuildingListPage from "./page/BuildingListPage.tsx";
+import EventDetailsPage from './page/EventDetailsPage.tsx';
+import TicketPurchasePage from "./page/TicketPurchasePage.tsx";
 
 const App = () => {
     return (
@@ -45,6 +47,8 @@ const App = () => {
                             <Route path={WEB_ENDPOINTS.events} element={<EventsPage />} />
                             <Route path={WEB_ENDPOINTS.addBuilding} element={<AddBuildingPage />} />
                             <Route path={WEB_ENDPOINTS.building} element={<BuildingListPage />} />
+                            <Route path={WEB_ENDPOINTS.eventById} element={<EventDetailsPage />} />
+                            <Route path={WEB_ENDPOINTS.buyTickets} element={<TicketPurchasePage />} />
                         </Route>
                     </Route>
                     <Route element={<RequireAuth allowedRoles={[Privilege.ADMINISTRATOR]} />}>
