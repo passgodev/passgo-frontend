@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import AlertContext from '../../context/AlertProvider.tsx';
 import { Auth } from '../../context/AuthProvider.tsx';
 import useAuth from '../../hook/useAuth.ts';
-import Privilege from '../../model/member/Privilege.ts';
+import { retrieveMemberId, transferMemberTypeToPrivilege } from '../../util/AccessTokenUtil.ts';
 import API_ENDPOINTS from '../../util/endpoint/ApiEndpoint.ts';
 import WEB_ENDPOINTS from '../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../util/HttpMethod.ts';
@@ -13,24 +13,6 @@ import HttpMethod from '../../util/HttpMethod.ts';
 interface LoginResponse {
     token: string,
     refreshToken: string
-}
-
-const transferMemberTypeToPrivilege = (accessToken: string): Privilege => {
-    if ( accessToken.indexOf('.') !== 2 ) {
-        console.log('retrieveMemberType : invalid jwt representation, two dots expected');
-    }
-    const payload = accessToken.split('.')[1];
-    const decodedPayload = atob(payload);
-    const payloadJson = JSON.parse(decodedPayload);
-    const memberType = payloadJson?.memberType ?? undefined;
-    if ( memberType === undefined ) {
-        console.log('retrieveMemberType : memberType is undefined');
-    }
-    const privilege = Privilege[memberType as keyof typeof Privilege];
-    if ( privilege === undefined ) {
-        console.log('retrieveMemberType : privilege is undefined');
-    }
-    return privilege;
 }
 
 const LoginPage = () => {
@@ -63,7 +45,8 @@ const LoginPage = () => {
                     const accessToken = jsonResponse?.token;
                     const refreshToken = jsonResponse?.refreshToken;
                     const privilege = transferMemberTypeToPrivilege(accessToken);
-                    const authObject: Auth = {token: accessToken, refreshToken: refreshToken, privilege: privilege};
+                    const memberId = retrieveMemberId(accessToken);
+                    const authObject: Auth = {memberId, token: accessToken, refreshToken: refreshToken, privilege: privilege};
 
                     console.log('authenticated response: ', jsonResponse, authObject);
 

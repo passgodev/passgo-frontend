@@ -1,23 +1,22 @@
 import AccountCircle from "@mui/icons-material/AccountCircle";
 import {
-    AppBar,
-    Box,
-    Container,
-    CssBaseline,
-    Drawer,
-    IconButton,
-    List,
-    ListItemButton,
-    ListItemText,
-    Toolbar,
-    Typography
-} from '@mui/material';
-import { Link, Outlet } from 'react-router-dom';
-import Privilege from '../model/member/Privilege.ts';
-import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
-import ButtonCollapseList from './ButtonCollapseList.tsx';
-import EnableOnRole from './EnableOnRole.tsx';
-
+  AppBar,
+  Box,
+  Container,
+  CssBaseline,
+  Drawer,
+  IconButton,
+  List,
+  ListItemButton,
+  ListItemText,
+  Toolbar,
+  Typography,
+} from "@mui/material";
+import { Link, Outlet } from "react-router-dom";
+import Privilege from "../model/member/Privilege.ts";
+import WEB_ENDPOINTS from "../util/endpoint/WebEndpoint.ts";
+import ButtonCollapseList from "./ButtonCollapseList.tsx";
+import EnableOnRole from "./EnableOnRole.tsx";
 
 const drawerWidth = 240;
 
@@ -81,43 +80,17 @@ const Layout = () => {
                 <ListItemText primary="Transactions" />
               </ListItemButton>
 
-                            <ListItemButton component={Link} to={WEB_ENDPOINTS.faq} >
-                                <ListItemText primary="FAQ" />
-                            </ListItemButton>
-                             
-                            <ListItemButton
-                                component={Link}
-                                to={WEB_ENDPOINTS.events}
-                            >
-                                <ListItemText primary="Events" />
-                            </ListItemButton>
-
-                            <ListItemButton component={Link} to={WEB_ENDPOINTS.building} >
-                                <ListItemText primary="Building" />
-                            </ListItemButton>
-        
-                            <EnableOnRole allowedRoles={[Privilege.ADMINISTRATOR]}>
-                                <ListItemButton component={Link} to={WEB_ENDPOINTS.adminFaq} >
-                                    <ListItemText primary="Admin FAQ" />
-                                </ListItemButton>
-                            </EnableOnRole>
-                            <EnableOnRole allowedRoles={[Privilege.ADMINISTRATOR]}>
-                                <ButtonCollapseList name='Members'>
-                                        <ListItemButton sx={{ pl: 4 }} component={Link} to={WEB_ENDPOINTS.adminClientList}>
-                                            <ListItemText primary="Clients" />
-                                        </ListItemButton>
-                                        <ListItemButton sx={{ pl: 4 }} component={Link} to={WEB_ENDPOINTS.adminOrganizerList}>
-                                            <ListItemText primary="Organizers" />
-                                        </ListItemButton>
-                                </ButtonCollapseList>
-                            </EnableOnRole>
-                        </List>
-                    </Box>
-                </Drawer>
+              <ListItemButton component={Link} to={WEB_ENDPOINTS.faq}>
+                <ListItemText primary="FAQ" />
+              </ListItemButton>
 
               <ListItemButton component={Link} to={WEB_ENDPOINTS.events}>
                 <ListItemText primary="Events" />
               </ListItemButton>
+
+                <ListItemButton component={Link} to={WEB_ENDPOINTS.building} >
+                    <ListItemText primary="Building" />
+                </ListItemButton>
 
               <EnableOnRole allowedRoles={[Privilege.ADMINISTRATOR]}>
                 <ListItemButton component={Link} to={WEB_ENDPOINTS.adminFaq}>

@@ -1,5 +1,5 @@
 import { Route, Routes } from "react-router-dom";
-import Layout from "./component/Layout.tsx";
+import Layout from "./component/layout/Layout.tsx";
 import PersistLogin from "./component/PersistLogin.tsx";
 import RequireAuth from "./component/RequireAuth.tsx";
 import Privilege from "./model/member/Privilege.ts";
@@ -7,6 +7,7 @@ import AdminFaqPage from "./page/AdminFaqPage.tsx";
 import FaqPage from "./page/FaqPage.tsx";
 import Home from "./page/Home.tsx";
 import LoginPage from "./page/login/LoginPage.tsx";
+import LogoutPage from './page/logout/LogoutPage.tsx';
 import ActiveMemberProfilePage from "./page/member/ActiveMemberProfilePage.tsx";
 import AdminClientListPage from "./page/member/AdminClientListPage.tsx";
 import AdminOrganizerListPage from "./page/member/AdminOrganizerListPage.tsx";
@@ -33,6 +34,8 @@ const App = () => {
                     path={WEB_ENDPOINTS.unauthorized}
                     element={<UnauthorizedPage />}
                 />
+
+                <Route path={WEB_ENDPOINTS.logout} element={<LogoutPage />} />
 
                 {/* protected routes */}
                 <Route element={<PersistLogin />}>
