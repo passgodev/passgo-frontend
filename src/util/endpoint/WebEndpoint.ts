@@ -13,7 +13,9 @@ const WEB_ENDPOINTS = {
     adminClientList: endpointCreator('/admin/members/client'),
     adminOrganizerList: endpointCreator('/admin/members/organizer'),
     events: endpointCreator("/events"),
-    eventById: endpointCreator("/events/:id")
+    eventById: endpointCreator("/events/:id"),
+    buyTickets: endpointCreator("/events/:id/buy"),
+    purchaseTickets: endpointCreator("/api/tickets/purchase")
 }
 
 function endpointCreator(endpoint: string): Endpoint {
