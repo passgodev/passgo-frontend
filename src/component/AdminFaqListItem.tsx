@@ -1,11 +1,11 @@
 import { IconButton, Typography, Box, Paper } from "@mui/material";
 import { Edit, Delete } from "@mui/icons-material";
-import Faq from "../interface/FaqInterface";
+import FaqDto from "../model/faq/FaqDto.ts";
 
 interface Props {
-    faq: Faq;
-    onEdit: (faq: Faq) => void;
-    onDelete: (faq: Faq) => void;
+    faq: FaqDto;
+    onEdit: (faq: FaqDto) => void;
+    onDelete: (faq: FaqDto) => void;
 }
 
 const AdminFaqListItem = ({ faq, onEdit, onDelete }: Props) => (

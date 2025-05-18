@@ -6,13 +6,13 @@ import {
     Button,
     TextField,
 } from "@mui/material";
-import Faq from "../interface/FaqInterface";
+import FaqDto from "../model/faq/FaqDto.ts";
 
 interface Props {
     open: boolean;
-    faq: Partial<Faq> | null;
+    faq: Partial<FaqDto> | null;
     onClose: () => void;
-    onChange: (faq: Partial<Faq>) => void;
+    onChange: (faq: Partial<FaqDto>) => void;
     onSave: () => void;
 }
 
