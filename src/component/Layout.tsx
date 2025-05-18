@@ -1,9 +1,11 @@
+import AccountCircle from '@mui/icons-material/AccountCircle';
 import {
     AppBar,
     Box,
     Container,
     CssBaseline,
     Drawer,
+    IconButton,
     List,
     ListItemButton,
     ListItemText,
@@ -11,12 +13,11 @@ import {
     Typography
 } from '@mui/material';
 import { Link, Outlet } from 'react-router-dom';
-import Privilege from '../../model/member/Privilege.ts';
-import CardWrapperComponent from '../../page/member/CardWrapperComponent.tsx';
-import WEB_ENDPOINTS from '../../util/endpoint/WebEndpoint.ts';
-import ButtonCollapseList from '../ButtonCollapseList.tsx';
-import EnableOnRole from '../EnableOnRole.tsx';
-import AccountButton from './AccountButton.tsx';
+import Privilege from '../model/member/Privilege.ts';
+import CardWrapperComponent from '../page/member/CardWrapperComponent.tsx';
+import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
+import ButtonCollapseList from './ButtonCollapseList.tsx';
+import EnableOnRole from './EnableOnRole.tsx';
 
 
 const drawerWidth = 240;
@@ -41,7 +42,16 @@ const Layout = () => {
                             PassGo
                         </Link>
                     </Typography>
-                    <AccountButton />
+                    <IconButton
+                        size="large"
+                        aria-label="account of current user"
+                        aria-controls="menu-appbar"
+                        aria-haspopup="true"
+                        color="inherit"
+                        component={Link} to='/members/me'
+                    >
+                        <AccountCircle />
+                    </IconButton>
                 </Toolbar>
             </AppBar>
 
