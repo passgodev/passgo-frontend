@@ -1,4 +1,4 @@
-import { Box } from "@mui/material";
+import { Box, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import EventCard from "../component/EventCard";
@@ -21,19 +21,18 @@ const EventsPage = () => {
 
   const InterceptedFetch = useInterceptedFetch();
 
-
   useEffect(() => {
     const fetchEventsWithImages = async () => {
       try {
-        const res = await InterceptedFetch({endpoint:ApiEndpoints.events});
+        const res = await InterceptedFetch({ endpoint: ApiEndpoints.events });
         const data: EventItem[] = await res.json();
 
         const eventsWithImages = await Promise.all(
           data.map(async (event) => {
             try {
-              const imageRes = await InterceptedFetch(
-                {endpoint:`${ApiEndpoints.events}/${event.id}/image`}
-              );
+              const imageRes = await InterceptedFetch({
+                endpoint: `${ApiEndpoints.events}/${event.id}/image`,
+              });
               if (!imageRes.ok) throw new Error("Image not found");
               const blob = await imageRes.blob();
               const imageUrl = URL.createObjectURL(blob);
@@ -56,6 +55,20 @@ const EventsPage = () => {
 
   return (
     <>
+      <Paper
+        sx={{
+          p: 2,
+          mb: 2,
+          backgroundColor: "#64affa",
+          color: "#eee",
+          boxShadow: "0px 2px 2px rgba(0, 0, 0, 0.1)",
+          display: "flex",
+          justifyContent: "space-between",
+        }}
+      >
+        <Typography variant="h5">Events</Typography>
+      </Paper>
+
       <Box sx={{ p: 3 }}>
         {events.map((event) => (
           <EventCard
