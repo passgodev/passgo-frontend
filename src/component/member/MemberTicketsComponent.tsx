@@ -1,11 +1,10 @@
+import { CircularProgress, Typography } from '@mui/material';
 import { useContext, useEffect, useState } from 'react';
-import { Box, Card, CircularProgress, Typography } from '@mui/material';
-import useInterceptedFetch from '../../hook/useInterceptedFetch.ts';
 import AlertContext from '../../context/AlertProvider.tsx';
+import useInterceptedFetch from '../../hook/useInterceptedFetch.ts';
+import ClientDto from '../../model/client/ClientDto.ts';
 import SimpleTicketDto from '../../model/ticket/SimpleTicketDto.ts';
 import API_ENDPOINTS from '../../util/endpoint/ApiEndpoint.ts';
-import ClientDto from '../../model/client/ClientDto.ts';
-import { Grid } from '@mui/material';
 
 
 interface MemberTicketsComponentProps {
@@ -40,7 +39,7 @@ const MemberTicketsComponent = ({ member }: MemberTicketsComponentProps) => {
             })
             .finally(() => setLoading(false));
 
-    }, []);
+    }, [member.id]);
 
     if (loading) {
         return <CircularProgress />;

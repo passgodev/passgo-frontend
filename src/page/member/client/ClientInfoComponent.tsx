@@ -1,6 +1,5 @@
 import { Box } from '@mui/material';
 import MemberInformationComponent from '../../../component/member/MemberInformationComponent.tsx';
-import LatestTransactionsComponent from '../../../component/transaction/LatestTransactionsComponent.tsx';
 import MemberTicketsComponent from '../../../component/member/MemberTicketsComponent.tsx';
 import ClientDto from '../../../model/client/ClientDto.ts';
 import MemberType from '../../../model/member/MemberType.ts';
