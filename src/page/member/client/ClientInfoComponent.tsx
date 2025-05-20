@@ -3,6 +3,7 @@ import MemberInformationComponent from '../../../component/member/MemberInformat
 import MemberTicketsComponent from '../../../component/member/MemberTicketsComponent.tsx';
 import ClientDto from '../../../model/client/ClientDto.ts';
 import MemberType from '../../../model/member/MemberType.ts';
+import LatestTransactionsComponent from '../../../component/transaction/LatestTransactionsComponent.tsx';
 
 
 const userMock = {
@@ -26,19 +27,19 @@ interface ClientInfoPageProps {
 const ClientInfoComponent = ({ client }: ClientInfoPageProps) => {
     const user = {...userMock, ...client};
     
-    console.log('ClientInfoComponent - informations of user', user);
-    // console.log('ClientInfoComponent - informations of client', client);
+    // console.log('ClientInfoComponent - informations of user', user);
+    // console.log('MOJ KURWA WYKURWISTY DEBUG', user);
     return (
         <Box>
             {/* Sekcja: O użytkowniku */}
             <MemberInformationComponent member={{...user}} />
 
             {/* Sekcja: Ostatnie transakcje */}
-            {/* <LatestTransactionsComponent transactions={user.transactions} /> */}
+            <LatestTransactionsComponent transactions={user.transactions} />
 
             {/* Sekcja: Bilety */}
             {/* <div>{user.address}</div> */}
-            <MemberTicketsComponent member={{...user}} />
+            <MemberTicketsComponent member={user} />
         </Box>
     );
 };
