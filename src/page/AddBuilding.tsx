@@ -7,6 +7,7 @@ import { Building } from "../model/building/Building.ts"
 import { Sector } from "../model/building/Sector.ts"
 import { useNavigate } from "react-router-dom";
 import SectorEditor from "../component/SectorEditor.tsx";
+import StandingAreaEditor from "../component/StandingAreaEditor.tsx";
 import useInterceptedFetch from "../hook/useInterceptedFetch.ts";
 import ApiEndpoint from "../util/endpoint/ApiEndpoint.ts";
 import WebEndpoint from "../util/endpoint/WebEndpoint.ts";
@@ -23,6 +24,12 @@ const AddBuildingPage = () => {
             buildingNumber: "",
         },
         sectors: [],
+    });
+    const [hasStandingArea, setHasStandingArea] = useState<boolean>(false);
+    const [standingAreaSector, setStandingAreaSector] = useState<Sector>({
+        name: "Standing",
+        standingArea: true,
+        rows: [{ rowNumber: 0, seatsCount: 0 }]
     });
 
     const fetch = useInterceptedFetch();
@@ -55,7 +62,7 @@ const AddBuildingPage = () => {
         const payload = {
             name: building.name,
             address: building.address,
-            sectors: building.sectors
+            sectors: hasStandingArea ? [standingAreaSector, ...building.sectors] : building.sectors
         };
 
         fetch({
@@ -110,6 +117,12 @@ const AddBuildingPage = () => {
 
             <Paper sx={{ p: 2, mb: 2 }}>
                 <Typography variant="h6">Sectors</Typography>
+                <StandingAreaEditor
+                    hasStandingArea={hasStandingArea}
+                    setHasStandingArea={setHasStandingArea}
+                    standingAreaSector={standingAreaSector}
+                    setStandingAreaSector={setStandingAreaSector}
+                />
                 {building.sectors.map((sector, index) => (
                     <Paper key={index} sx={{ p: 2, my: 2, position: "relative" }}>
                         <SectorEditor
