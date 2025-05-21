@@ -31,7 +31,7 @@ const AddEventPage = () => {
     }, []);
 
     const loadBuildingDetails = (id: number) => {
-        fetch({endpoint: `${ApiEndpoint.buildings}/${id}`})
+        fetch({endpoint: ApiEndpoint.buildingsDetails.replace(":id", id.toString())})
             .then(res => res.json())
             .then(data => {
                 setSelected(data);
@@ -75,7 +75,7 @@ const AddEventPage = () => {
                 formData.append("file", imageFile);
 
                 const imageRes = await fetch({
-                    endpoint: `${ApiEndpoint.events}/${eventId}/image`,
+                    endpoint: ApiEndpoint.eventImage.replace(":id", eventId.toString()),
                     reqInit: {
                         method: "POST",
                         body: formData,

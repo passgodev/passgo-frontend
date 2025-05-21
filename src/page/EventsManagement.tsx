@@ -27,7 +27,7 @@ const EventsManagementPage = () => {
     };
 
     const loadImage = (eventId: number) => {
-        fetch( { endpoint: `${ApiEndpoint.events}/${eventId}/image`})
+        fetch( { endpoint: ApiEndpoint.eventImage.replace(":id", eventId.toString()) } )
             .then(res => {
                 if (!res.ok) throw new Error("Image fetch failed");
                 return res.blob();

@@ -15,7 +15,7 @@ const TicketInfoViewer = ({ eventId }: TicketInfoViewerProps) => {
 
     useEffect(() => {
         setLoading(true);
-        fetch({ endpoint: `${ApiEndpoint.ticketsInfo}/${eventId}` })
+        fetch({ endpoint: ApiEndpoint.ticketsInfo.replace(":eventId", eventId.toString()) })
             .then(res => res.json())
             .then(setTicketsInfo)
             .finally(() => setLoading(false));
