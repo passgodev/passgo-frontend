@@ -7,17 +7,7 @@ import LatestTransactionsComponent from '../../../component/transaction/LatestTr
 
 
 const userMock = {
-    firstName: 'Jan',
-    lastName: 'Kowalski',
     role: MemberType[MemberType.CLIENT],
-    age: 30,
-    address: 'ul. Kwiatowa 15, 00-123 Warszawa',
-    avatar: 'https://i.pravatar.cc/150?img=3',
-    transactions: [
-        { id: 'TXN123', amount: '150.00 PLN', date: '2024-05-10' },
-        { id: 'TXN122', amount: '89.99 PLN', date: '2024-05-07' },
-        { id: 'TXN121', amount: '240.50 PLN', date: '2024-05-01' },
-    ],
 };
 
 interface ClientInfoPageProps {
@@ -25,17 +15,16 @@ interface ClientInfoPageProps {
 }
 
 const ClientInfoComponent = ({ client }: ClientInfoPageProps) => {
-    const user = {...userMock, ...client};
-    
-    // console.log('ClientInfoComponent - informations of user', user);
-    // console.log('MOJ KURWA WYKURWISTY DEBUG', user);
+    const user = {...userMock, ...client}
+    console.log('ClientInfoComponent - informations of user DUOA', user);
+
     return (
         <Box>
             {/* Sekcja: O użytkowniku */}
-            <MemberInformationComponent member={{...user}} />
+            <MemberInformationComponent member={user} />
 
             {/* Sekcja: Ostatnie transakcje */}
-            <LatestTransactionsComponent transactions={user.transactions} />
+            <LatestTransactionsComponent member={user} />
 
             {/* Sekcja: Bilety */}
             {/* <div>{user.address}</div> */}

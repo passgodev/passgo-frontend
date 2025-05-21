@@ -5,7 +5,8 @@ interface ClientDto {
     email: string,
     registrationDate: Date,
     birthDate: Date,
-    isActive: boolean
+    isActive: boolean,
+    role: string
 }
 
 export default ClientDto;

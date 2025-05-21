@@ -40,10 +40,6 @@ const ActiveMemberProfilePage = () => {
             .then(res => res.json())
             .then(json => {
                 console.log('ActiveMemberProfilePage - returned json', json);
-
-                // PROBLEM JEST TUTAJ BO W TYM MIEJSCU MEMBER AKA JSON JEST DOBRZE POBIERANY I TO DZIAŁA
-                // ALE GDY PRZEKAZYWANY JEST DO KLASY ClientInfoComponent TO WTEDY JUZ SIĘ TRACI
-
                 setMember(json)
             })
             .catch(err => {
