@@ -1,5 +1,5 @@
 import {Address} from "./Address.ts";
-import { Status } from "./Status.ts";
+import { Status } from "../Status.ts";
 import {SectorDto} from "./SectorDto.ts";
 
 export interface BuildingDto {

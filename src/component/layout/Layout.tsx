@@ -89,6 +89,13 @@ const Layout = () => {
 
                             <ListItemButton
                                 component={Link}
+                                to={WEB_ENDPOINTS.eventsManagement}
+                            >
+                                <ListItemText primary="Events Management" />
+                            </ListItemButton>
+
+                            <ListItemButton
+                                component={Link}
                                 to={WEB_ENDPOINTS.building}
                             >
                                 <ListItemText primary="Building" />

@@ -21,7 +21,6 @@ const EventsPage = () => {
 
   const InterceptedFetch = useInterceptedFetch();
 
-
   useEffect(() => {
     const fetchEventsWithImages = async () => {
       try {

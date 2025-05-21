@@ -22,6 +22,8 @@ import AddBuildingPage from "./page/AddBuilding.tsx";
 import BuildingListPage from "./page/BuildingListPage.tsx";
 import EventDetailsPage from './page/EventDetailsPage.tsx';
 import TicketPurchasePage from "./page/TicketPurchasePage.tsx";
+import AddEventPage from "./page/AddEvent.tsx";
+import EventsManagementPage from "./page/EventsManagement.tsx";
 
 const App = () => {
     return (
@@ -52,6 +54,8 @@ const App = () => {
                             <Route path={WEB_ENDPOINTS.building} element={<BuildingListPage />} />
                             <Route path={WEB_ENDPOINTS.eventById} element={<EventDetailsPage />} />
                             <Route path={WEB_ENDPOINTS.buyTickets} element={<TicketPurchasePage />} />
+                            <Route path={WEB_ENDPOINTS.eventsManagement} element={<EventsManagementPage />} />
+                            <Route path={WEB_ENDPOINTS.addEvent} element={<AddEventPage />} />
                         </Route>
                     </Route>
                     <Route element={<RequireAuth allowedRoles={[Privilege.ADMINISTRATOR]} />}>
