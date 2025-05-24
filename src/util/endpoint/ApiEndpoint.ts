@@ -13,13 +13,17 @@ const API_ENDPOINTS = {
     members: endpointCreator('/members?type=:memberType'),
     memberById: endpointCreator('/members/:id?type=:memberType'),
     events: endpointCreator('/events'),
+    eventImage: endpointCreator('/events/:id/image'),
     buildings: endpointCreator('/buildings'),
     buyTickets: endpointCreator('/tickets/purchase'),
     clientTickets: endpointCreator('/tickets/client/:id'),
     transactionsByClientId: endpointCreator('/transactions/user/:id'),
     returnTicket: endpointCreator('/tickets/:id/return'),
     getTicketPdf: endpointCreator('/tickets/:id/pdf'),
-    eventImage: endpointCreator('/events/:id/image')
+    eventImage: endpointCreator('/events/:id/image'),
+    buildingsDetails: endpointCreator('/buildings/:id'),
+    buyTickets: endpointCreator('/tickets/purchase'),
+    ticketsInfo: endpointCreator('/tickets/:eventId/info'),
 }
 
 

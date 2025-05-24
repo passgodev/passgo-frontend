@@ -1,8 +1,6 @@
 import {
     Box,
     TextField,
-    Checkbox,
-    FormControlLabel,
     Button,
     Divider,
 } from "@mui/material";
@@ -42,17 +40,6 @@ const SectorEditor = ({ sector, onChange }: Props) => {
                 margin="normal"
                 value={sector.name}
                 onChange={(e) => onChange({ ...sector, name: e.target.value })}
-            />
-            <FormControlLabel
-                control={
-                    <Checkbox
-                        checked={sector.standingArea}
-                        onChange={(e) =>
-                            onChange({ ...sector, standingArea: e.target.checked })
-                        }
-                    />
-                }
-                label="Standing Area"
             />
             {sector.rows.map((row, i) => (
                 <RowEditor key={i} row={row} onChange={(r) => updateRow(i, r)} onDelete={() => removeRow(i)} />
