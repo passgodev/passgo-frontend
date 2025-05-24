@@ -16,7 +16,10 @@ const API_ENDPOINTS = {
     buildings: endpointCreator('/buildings'),
     buyTickets: endpointCreator('/tickets/purchase'),
     clientTickets: endpointCreator('/tickets/client/:id'),
-    transactionsByClientId: endpointCreator('/transactions/user/:id')
+    transactionsByClientId: endpointCreator('/transactions/user/:id'),
+    returnTicket: endpointCreator('/tickets/:id/return'),
+    getTicketPdf: endpointCreator('/tickets/:id/pdf'),
+    eventImage: endpointCreator('/events/:id/image')
 }
 
 

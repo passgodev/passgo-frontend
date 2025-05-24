@@ -48,9 +48,15 @@ const MemberTicketsComponent = ({ member }: MemberTicketsComponentProps) => {
     }, [member.id]);
 
     const handleReturn = async (ticketId: number) => {
+
+        const endpoint = API_ENDPOINTS.returnTicket.replace(
+            ":id",
+            ticketId.toString()
+        );
+
         try {
             await interceptedFetch({
-                endpoint: `/api/tickets/${ticketId}/return`,
+                endpoint: endpoint,
                 reqInit: { method: "POST" },
             });
             setTickets((prev) => prev.filter((t) => t.id !== ticketId));
@@ -62,9 +68,15 @@ const MemberTicketsComponent = ({ member }: MemberTicketsComponentProps) => {
     };
 
     const handleDownloadPdf = async (ticketId: number) => {
+
+        const endpoint = API_ENDPOINTS.getTicketPdf.replace(
+            ":id",
+            ticketId.toString()
+        );
+
         try {
             const res = await interceptedFetch({
-                endpoint: `/api/tickets/${ticketId}/pdf`,
+                endpoint: endpoint,
                 reqInit: { method: "GET" },
             });
 
