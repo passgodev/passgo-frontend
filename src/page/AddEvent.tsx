@@ -66,7 +66,13 @@ const AddEventPage = () => {
             }
         });
 
-        if (res.ok) {
+        if (!res.ok) {
+            const errorData = await res.json();
+            const errorText = errorData.message;
+            alert('Error: ' + errorText);
+            return; 
+        }
+        else{
             const created = await res.json();
             const eventId = created.id;
 
