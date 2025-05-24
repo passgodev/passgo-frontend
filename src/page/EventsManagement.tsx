@@ -4,26 +4,50 @@ import {
 import {
     Visibility, CheckCircle, Cancel, Delete, Add
 } from "@mui/icons-material";
-import { useEffect, useState } from "react";
+import {useContext, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import WebEndpoint from "../util/endpoint/WebEndpoint";
 import ApiEndpoint from "../util/endpoint/ApiEndpoint";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
 import {DetailedEventDto} from "../model/event/DetailedEventDto.ts";
 import TicketInfoViewer from "../component/TicketInfoViewer.tsx";
+import AuthContext from "../context/AuthProvider.tsx";
+import Privilege from "../model/member/Privilege.ts";
 const EventsManagementPage = () => {
     const [events, setEvents] = useState<DetailedEventDto[]>([]);
     const [eventImages, setEventImages] = useState<Record<number, string>>({});
     const [expandedEventId, setExpandedEventId] = useState<number | null>(null);
     const [showTickets, setShowTickets] = useState(false);
+    const { auth } = useContext(AuthContext);
+    const role = auth.privilege;
+    const id = auth.memberId;
 
     const fetch = useInterceptedFetch();
     const navigate = useNavigate();
 
-    const loadEvents = () => {
+    const loadAllEvents = () => {
         fetch({ endpoint: ApiEndpoint.events })
             .then(res => res.json())
             .then(setEvents);
+    };
+
+    const loadOrganizerEvents = (id: string | undefined) => {
+        if(id === undefined) {
+            return;
+        }
+
+        fetch({ endpoint: ApiEndpoint.organizerEvents.replace(":id", id) })
+            .then(res => res.json())
+            .then(setEvents);
+    };
+
+
+    const loadEvents = () => {
+        if(role === Privilege.ADMINISTRATOR){
+            loadAllEvents();
+        } else if(role === Privilege.ORGANIZER){
+            loadOrganizerEvents(id);
+        }
     };
 
     const loadImage = (eventId: number) => {
@@ -105,13 +129,15 @@ const EventsManagementPage = () => {
         <Box p={4}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="h4">Events management</Typography>
-                <Button
-                    variant="contained"
-                    startIcon={<Add />}
-                    onClick={() => navigate(WebEndpoint.addEvent)}
-                >
-                    Add Event
-                </Button>
+                {role === Privilege.ORGANIZER && (
+                    <Button
+                        variant="contained"
+                        startIcon={<Add />}
+                        onClick={() => navigate(WebEndpoint.addEvent)}
+                    >
+                        Add Event
+                    </Button>
+                )}
             </Box>
 
             {events.map(event => (
@@ -120,8 +146,12 @@ const EventsManagementPage = () => {
                         <Typography variant="h6">{event.name} ({event.category}) Status: {event.status}</Typography>
                         <Box>
                             <IconButton onClick={() => handleToggleExpand(event.id)}><Visibility /></IconButton>
-                            <IconButton color="success" onClick={() => handleApprove(event.id)}><CheckCircle /></IconButton>
-                            <IconButton color="error" onClick={() => handleReject(event.id)}><Cancel /></IconButton>
+                            {role === Privilege.ADMINISTRATOR && (
+                                <>
+                                    <IconButton color="success" onClick={() => handleApprove(event.id)}><CheckCircle /></IconButton>
+                                    <IconButton color="error" onClick={() => handleReject(event.id)}><Cancel /></IconButton>
+                                </>
+                            )}
                             <IconButton color="error" onClick={() => handleDelete(event.id)}><Delete /></IconButton>
                         </Box>
                     </Box>

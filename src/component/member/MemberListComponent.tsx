@@ -10,10 +10,11 @@ import { Paginated } from '../../util/pagination/Paginated.ts';
 
 interface MemberListComponentProps<T extends GridValidRowModel> {
     memberType: MemberType,
-    columns: GridColDef<T>[]
+    columns: GridColDef<T>[],
+    refreshKey?: number
 }
 
-const MemberListComponent = <T extends GridValidRowModel,> ({memberType, columns}: MemberListComponentProps<T>) => {
+const MemberListComponent = <T extends GridValidRowModel,> ({memberType, columns, refreshKey}: MemberListComponentProps<T>) => {
     const interceptedFetch = useInterceptedFetch();
     const [paginatedMembers, setPaginatedMembers] = useState<Paginated<T>>();
 
@@ -29,7 +30,7 @@ const MemberListComponent = <T extends GridValidRowModel,> ({memberType, columns
 
     useEffect(() => {
         loadMember();
-    }, []);
+    }, [loadMember, refreshKey]);
 
     const members = paginatedMembers?.content;
     const pagination: GridPaginationInitialState = {
