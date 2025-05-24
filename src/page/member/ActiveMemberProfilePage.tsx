@@ -51,6 +51,7 @@ const ActiveMemberProfilePage = () => {
     const pickProperComponent = (privilege: Privilege): ReactNode => {
         switch (privilege) {
             case Privilege.CLIENT: {
+                if (!member) return <div>Loading...</div>;
                 return <ClientInfoComponent client={member as ClientDto} />;
             }
             case Privilege.ORGANIZER: {
