@@ -20,10 +20,11 @@ const API_ENDPOINTS = {
     transactionsByClientId: endpointCreator('/transactions/user/:id'),
     returnTicket: endpointCreator('/tickets/:id/return'),
     getTicketPdf: endpointCreator('/tickets/:id/pdf'),
-    eventImage: endpointCreator('/events/:id/image'),
     buildingsDetails: endpointCreator('/buildings/:id'),
-    buyTickets: endpointCreator('/tickets/purchase'),
     ticketsInfo: endpointCreator('/tickets/:eventId/info'),
+    eventDetails: endpointCreator('/events/details'),
+    wallet: endpointCreator('/wallets/client/:id'),
+    addMoney: endpointCreator('/wallets/:id/transaction')
 }
 
 

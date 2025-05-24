@@ -27,7 +27,6 @@ const ClientInfoComponent = ({ client }: ClientInfoPageProps) => {
             <LatestTransactionsComponent member={user} />
 
             {/* Sekcja: Bilety */}
-            {/* <div>{user.address}</div> */}
             <MemberTicketsComponent member={user} />
         </Box>
     );
