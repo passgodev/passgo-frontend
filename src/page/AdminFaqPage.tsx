@@ -8,6 +8,7 @@ import AdminDeleteConfirmDialog from "../component/AdminDeleteConfirmDialog";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
 import AuthContext from "../context/AuthProvider.tsx";
 import Privilege from "../model/member/Privilege.ts";
+import AdminAddFaqButton from "../component/AdminAddFaqButton.tsx";
 
 const AdminFaqPage = () => {
     const [faqs, setFaqs] = useState<FaqDto[]>([]);
@@ -96,17 +97,15 @@ const AdminFaqPage = () => {
                 }}
             >
                 <Typography variant="h5">FAQ - Admin Panel</Typography>
-                {role === Privilege.ADMINISTRATOR && (
-                    <Button
-                        variant="contained"
-                        onClick={() => {
-                            setEditFaq({ question: "", answer: "" });
-                            setOpenDialog(true);
-                        }}
-                    >
-                        Add FAQ
-                    </Button>
-                )}
+                <AdminAddFaqButton
+                    role={role}
+                    onClick={() => {
+                        setEditFaq({ question: "", answer: "" });
+                        setOpenDialog(true);
+                    }}
+                >
+                    Add FAQ
+                </AdminAddFaqButton>
             </Paper>
 
             {faqs.map((faq) => (
