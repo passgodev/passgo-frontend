@@ -1,11 +1,14 @@
-import { Typography, Paper, Button, Box } from "@mui/material";
-import { useEffect, useState } from "react";
+import {Box, Button, Paper, Typography} from "@mui/material";
+import {useContext, useEffect, useState} from "react";
 import ApiEndpoints from "../util/endpoint/ApiEndpoint";
 import FaqDto from "../model/faq/FaqDto.ts";
 import AdminFaqListItem from "../component/AdminFaqListItem";
 import AdminFaqDialog from "../component/AdminFaqDialog";
 import AdminDeleteConfirmDialog from "../component/AdminDeleteConfirmDialog";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
+import AuthContext from "../context/AuthProvider.tsx";
+import Privilege from "../model/member/Privilege.ts";
+import AdminAddFaqButton from "../component/AdminAddFaqButton.tsx";
 
 const AdminFaqPage = () => {
     const [faqs, setFaqs] = useState<FaqDto[]>([]);
@@ -20,8 +23,14 @@ const AdminFaqPage = () => {
     const [faqToDelete, setFaqToDelete] = useState<FaqDto | null>(null);
 
     const fetch = useInterceptedFetch();
+    const { auth } = useContext(AuthContext);
+    const role = auth.privilege;
 
     const fetchFaqs = () => {
+        if(role !== Privilege.ADMINISTRATOR) {
+            return;
+        }
+
         fetch({ endpoint: `${ApiEndpoints.faq}?page=${page}&size=${pageSize}` })
             .then((res) => res.json())
             .then((data) => {
@@ -88,15 +97,15 @@ const AdminFaqPage = () => {
                 }}
             >
                 <Typography variant="h5">FAQ - Admin Panel</Typography>
-                <Button
-                    variant="contained"
+                <AdminAddFaqButton
+                    role={role}
                     onClick={() => {
                         setEditFaq({ question: "", answer: "" });
                         setOpenDialog(true);
                     }}
                 >
                     Add FAQ
-                </Button>
+                </AdminAddFaqButton>
             </Paper>
 
             {faqs.map((faq) => (

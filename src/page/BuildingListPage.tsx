@@ -1,20 +1,20 @@
-import { useEffect, useState } from "react";
-import {
-    Box, Typography, Paper, Button, IconButton, Dialog, DialogTitle, DialogContent,
-} from "@mui/material";
-import { Delete, Visibility, CheckCircle, Cancel, Add } from "@mui/icons-material";
+import {useContext, useEffect, useState} from "react";
+import {Box, Button, Dialog, DialogContent, DialogTitle, IconButton, Paper, Typography,} from "@mui/material";
+import {Add, Cancel, CheckCircle, Delete, Visibility} from "@mui/icons-material";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
 import ApiEndpoint from "../util/endpoint/ApiEndpoint";
-// import { useAuth } from "../context/AuthContext";
 import {BuildingDto} from "../model/building/BuildingDto.ts";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 import WebEndpoint from "../util/endpoint/WebEndpoint.ts";
+import AuthContext from "../context/AuthProvider.tsx";
+import Privilege from "../model/member/Privilege.ts";
 
 const BuildingListPage = () => {
     const [buildings, setBuildings] = useState<BuildingDto[]>([]);
     const [selected, setSelected] = useState<BuildingDto | null>(null);
     const fetch = useInterceptedFetch();
-    // const { user } = useAuth(); // zakładamy, że user ma user.role
+    const { auth } = useContext(AuthContext);
+    const role = auth.privilege;
     const navigate = useNavigate();
 
     const loadBuildings = () => {
@@ -59,13 +59,15 @@ const BuildingListPage = () => {
         <Box p={4}>
             <Box display="flex" justifyContent="space-between" alignItems="center" mb={2}>
                 <Typography variant="h4">Building List</Typography>
-                <Button
-                    variant="contained"
-                    startIcon={<Add />}
-                    onClick={() => navigate(WebEndpoint.addBuilding)}
-                >
-                    Add Building
-                </Button>
+                {role === Privilege.ORGANIZER && (
+                    <Button
+                        variant="contained"
+                        startIcon={<Add />}
+                        onClick={() => navigate(WebEndpoint.addBuilding)}
+                    >
+                        Add Building
+                    </Button>
+                )}
             </Box>
 
             {buildings.map((b) => (
@@ -76,9 +78,13 @@ const BuildingListPage = () => {
 
                     <Box mt={1}>
                         <IconButton onClick={() => loadBuildingDetails(b.id)}><Visibility /></IconButton>
-                        <IconButton color="success" onClick={() => handleApprove(b.id)}><CheckCircle /></IconButton>
-                        <IconButton color="error" onClick={() => handleReject(b.id)}><Cancel /></IconButton>
-                        <IconButton color="error" onClick={() => handleDelete(b.id)}><Delete /></IconButton>
+                        {role === Privilege.ADMINISTRATOR && (
+                            <>
+                                <IconButton color="success" onClick={() => handleApprove(b.id)}><CheckCircle/></IconButton>
+                                <IconButton color="error" onClick={() => handleReject(b.id)}><Cancel/></IconButton>
+                                <IconButton color="error" onClick={() => handleDelete(b.id)}><Delete /></IconButton>
+                            </>
+                        )}
                     </Box>
                 </Paper>
             ))}

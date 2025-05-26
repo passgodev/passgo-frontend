@@ -1,7 +1,7 @@
 import {
     Box, Typography, TextField, Button, MenuItem, Grid, Paper
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import {useContext, useEffect, useState} from "react";
 import { useNavigate } from "react-router-dom";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
 import ApiEndpoint from "../util/endpoint/ApiEndpoint";
@@ -9,6 +9,8 @@ import WebEndpoint from "../util/endpoint/WebEndpoint";
 import dayjs from "dayjs";
 import {BuildingDto} from "../model/building/BuildingDto.ts";
 import {RowDto} from "../model/building/RowDto.ts";
+import AuthContext from "../context/AuthProvider.tsx";
+import Privilege from "../model/member/Privilege.ts";
 
 const AddEventPage = () => {
     const [name, setName] = useState("");
@@ -23,8 +25,16 @@ const AddEventPage = () => {
 
     const fetch = useInterceptedFetch();
     const navigate = useNavigate();
+    const { auth } = useContext(AuthContext);
+    const role = auth.privilege;
+    const organizerId = auth.memberId;
+    console.log('organizerId: ', organizerId);
 
     useEffect(() => {
+        if(role !== Privilege.ORGANIZER){
+            return;
+        }
+
         fetch({ endpoint: ApiEndpoint.buildings })
             .then(res => res.json())
             .then(setBuildings);
@@ -46,7 +56,11 @@ const AddEventPage = () => {
     }
 
     const handleSubmit = async () => {
+        if(organizerId === undefined) {
+            return;
+        }
         const payload = {
+            organizerId,
             name,
             buildingId,
             date,

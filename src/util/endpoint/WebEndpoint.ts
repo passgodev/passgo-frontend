@@ -13,6 +13,7 @@ const WEB_ENDPOINTS = {
     adminFaq: endpointCreator("/admin/faq"),
     adminClientList: endpointCreator('/admin/members/client'),
     adminOrganizerList: endpointCreator('/admin/members/organizer'),
+    adminOrganizersAcceptance: endpointCreator("/admin/members/organizer/acceptance"),
     events: endpointCreator("/events"),
     addBuilding: endpointCreator('/building/add'),
     building: endpointCreator('/building'),
