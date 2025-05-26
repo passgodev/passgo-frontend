@@ -82,10 +82,8 @@ const BuildingListPage = () => {
                             <>
                                 <IconButton color="success" onClick={() => handleApprove(b.id)}><CheckCircle/></IconButton>
                                 <IconButton color="error" onClick={() => handleReject(b.id)}><Cancel/></IconButton>
+                                <IconButton color="error" onClick={() => handleDelete(b.id)}><Delete /></IconButton>
                             </>
-                        )}
-                        {(role === Privilege.ADMINISTRATOR || role === Privilege.ORGANIZER) && (
-                            <IconButton color="error" onClick={() => handleDelete(b.id)}><Delete /></IconButton>
                         )}
                     </Box>
                 </Paper>
