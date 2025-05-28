@@ -1,9 +1,11 @@
 import { TextField } from '@mui/material';
-import { useState } from 'react';
+import { useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import AlertContext from '../../../context/AlertProvider.tsx';
 import API_ENDPOINTS from '../../../util/endpoint/ApiEndpoint.ts';
 import WEB_ENDPOINTS from '../../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../../util/HttpMethod.ts';
+import logger from '../../../util/logger/Logger.ts';
 
 
 const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => void) => void}) => {
@@ -16,6 +18,7 @@ const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => v
     const [email, setEmail] = useState('');
 
     const navigate = useNavigate();
+    const { showAlert } = useContext(AlertContext);
 
     const signupBody = {
         credentials: {
@@ -28,13 +31,11 @@ const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => v
         birthDate: birthDate,
         organization: organizationName
     }
-    console.log('signupbody', signupBody);
+    logger.log('signupbody', signupBody);
 
     const handleSubmit = async () => {
-
         const headers = new Headers();
         headers.append('Content-Type', 'application/json');
-
 
         await fetch(
             `${API_ENDPOINTS.signup}?member=organizer`,
@@ -44,9 +45,21 @@ const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => v
                 headers: headers
             }
         ).then((res) => {
+            logger.log('SignupPage', 'Organizer signup response', res);
+
             if ( res.status === 200 ) {
+                logger.log('SignupPage', 'Organizer signup response - success');
+                showAlert(res.statusText, 'info');
                 navigate(WEB_ENDPOINTS.login);
+            } else {
+                const errorMessage = `${res.status} ${res.statusText}`;
+                logger.log('SignupPage', 'got status code !== 200', errorMessage);
+                showAlert(errorMessage, 'error');
             }
+        }).catch((err) => {
+            const errorMessage = `Error occured from signup request', ${err}`;
+            logger.log('SignupPage', errorMessage);
+            showAlert(errorMessage, 'error');
         });
     }
 
@@ -71,14 +84,6 @@ const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => v
                     type="text"
                 />
                 <TextField
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    fullWidth
-                    label="Email"
-                    name="email"
-                    type="text"
-                />
-                <TextField
                     onChange={(e) => setBirthDate(e.target.value)}
                     required
                     fullWidth
@@ -86,6 +91,14 @@ const OrganizerSignupCredentialComponent = (props: {handleSubmit: (func: () => v
                     name="dateofBirth"
                     type="date"
                     slotProps={{inputLabel: { shrink: true }}}
+                />
+                <TextField
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                    fullWidth
+                    label="Email"
+                    name="email"
+                    type="text"
                 />
                 <TextField
                     onChange={e => setOrganizationName(e.target.value)}

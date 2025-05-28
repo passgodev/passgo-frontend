@@ -8,11 +8,35 @@ import { retrieveMemberId, transferMemberTypeToPrivilege } from '../../util/Acce
 import API_ENDPOINTS from '../../util/endpoint/ApiEndpoint.ts';
 import WEB_ENDPOINTS from '../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../util/HttpMethod.ts';
+import logger from '../../util/logger/Logger.ts';
 
 
 interface LoginResponse {
     token: string,
     refreshToken: string
+}
+
+interface LoginErrorResponse {
+    message: string
+}
+
+const parseLoginResponse = (text: string): LoginResponse | undefined => {
+    try {
+        return JSON.parse(text) as unknown as LoginResponse;
+    } catch (e) {
+        logger.log('Login Page', 'parseLoginResponse error', e);
+        return undefined;
+    }
+}
+
+const parseErrorMessage = (error: string): string => {
+    try {
+        const parsedError = JSON.parse(error) as unknown as LoginErrorResponse;
+        return parsedError.message;
+    } catch (e) {
+        logger.log('Login Page', 'parseLoginErrorMessage error', e);
+        return error;
+    }
 }
 
 const LoginPage = () => {
@@ -27,7 +51,7 @@ const LoginPage = () => {
     const handleSubmit = useCallback(async (event: FormEvent) => {
         event.preventDefault();
 
-        console.log("Form submitted", login, password);
+        logger.log("Form submitted", "login", login, "password", password);
         const response = await fetch(
             API_ENDPOINTS.login,
             {
@@ -37,18 +61,21 @@ const LoginPage = () => {
                 credentials: 'include',
             })
             .then(async (res) => {
-                console.log(res);
+                logger.log('login response', res);
                 const text = await res.clone().text();
 
                 if (res.status === 200) {
-                    const jsonResponse = JSON.parse(text || "") as unknown as LoginResponse;
-                    const accessToken = jsonResponse?.token;
-                    const refreshToken = jsonResponse?.refreshToken;
+                    const jsonResponse = parseLoginResponse(text);
+                    if ( jsonResponse === undefined ) {
+                        showAlert('Login response is undefined', 'error');
+                        return;
+                    }
+
+                    const {token: accessToken, refreshToken} = jsonResponse;
                     const privilege = transferMemberTypeToPrivilege(accessToken);
                     const memberId = retrieveMemberId(accessToken);
                     const authObject: Auth = {memberId, token: accessToken, refreshToken: refreshToken, privilege: privilege};
-
-                    console.log('authenticated response: ', jsonResponse, authObject);
+                    logger.log('response 200', 'authObject', authObject)
 
                     setAuth(authObject);
                     // todo change to http only cookies, do not store it locally
@@ -57,16 +84,23 @@ const LoginPage = () => {
                     setLogin('');
                     setPassword('');
 
-                    navigate(from, {replace: true});
+                    navigate(from, { replace: true });
                 } else if ( res.status >= 400 && res.status < 599 ) {
-                    const errMsg = (text.length  !== 0) ? text : (res.status + ' ' + res.statusText);
+                    const errMsg = (text.length  !== 0) ? parseErrorMessage(text) : (res.status + ' ' + res.statusText);
+                    logger.log('loginPage', 'got res.status between 400 and 599', errMsg);
                     showAlert(errMsg, 'error')
                 } else {
-                    console.log('unexpected responseCode: ', res);
+                    const errorMessage = `Unexpected response code: ${res.status}`;
+                    logger.log('loginPage', errorMessage, 'failed response: ', res);
+                    showAlert(errorMessage, 'error');
                 }
             })
-            .catch(err => console.log('err', err));
-        console.log(response);
+            .catch(err => {
+                const errorMessage = `Error occured while logging in. ${err}`;
+                logger.log('loginPage', errorMessage);
+                showAlert(errorMessage, 'error');
+            });
+        logger.log('loginPage', 'proceed response', response);
     }, [from, login, navigate, password, setAuth, showAlert]);
 
     return (
