@@ -18,6 +18,15 @@ class ConsoleLogger implements Logger {
     }
 }
 
+export const loggerPrelogWithFactory = (prelogWith: any): Logger    => {
+    const logger = new ConsoleLogger();
+    const loggerLogFunctionRef = logger.log;
+    logger.log = (...messages: any[]) => {
+        loggerLogFunctionRef.call(logger, prelogWith, ...messages);
+    }
+    return logger;
+}
+
 const consoleLogger = new ConsoleLogger();
 
 export default consoleLogger;
