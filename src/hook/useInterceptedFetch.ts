@@ -13,7 +13,7 @@ interface useInterceptedFetchProps {
 
 const MAX_RETRIES = 3;
 
-const logger = loggerPrelogWithFactory('[useInterceptedFetch]')
+const logger = loggerPrelogWithFactory('[useInterceptedFetch]');
 
 
 const useInterceptedFetch = () => {
