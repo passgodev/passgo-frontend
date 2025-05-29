@@ -44,10 +44,13 @@ const EventDetailsPage = () => {
 
     useEffect(() => {
         const fetchEvent = async () => {
+            
+            if (!id) return;
+            const endpoint = API_ENDPOINTS.eventDetails.replace(":id", id.toString());
 
             try {
                 const res = await InterceptedFetch({
-                    endpoint: `${API_ENDPOINTS.eventDetails}/${id}`,
+                    endpoint: endpoint,
                 });
 
                 if (!res.ok) throw new Error("Nie udało się pobrać wydarzenia");
@@ -93,8 +96,6 @@ const EventDetailsPage = () => {
             </Box>
         );
     }
-    
-    console.log("DEBUGGG: ", event)
 
     const sectorCount = event.building.sectors.length;
     const rowCount = event.building.sectors.reduce(

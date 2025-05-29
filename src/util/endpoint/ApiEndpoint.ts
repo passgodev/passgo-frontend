@@ -22,7 +22,7 @@ const API_ENDPOINTS = {
     getTicketPdf: endpointCreator('/tickets/:id/pdf'),
     buildingsDetails: endpointCreator('/buildings/:id'),
     ticketsInfo: endpointCreator('/tickets/:eventId/info'),
-    eventDetails: endpointCreator('/events/details'),
+    eventDetails: endpointCreator('/events/:id/details'),
     wallet: endpointCreator('/wallets/client/:id'),
     addMoney: endpointCreator('/wallets/:id/transaction')
 }
