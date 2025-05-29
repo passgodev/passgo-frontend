@@ -1,5 +1,21 @@
-import { Avatar, Card, Divider, Grid, Typography } from "@mui/material";
+import {
+    Avatar,
+    Box,
+    Button,
+    Card,
+    Dialog,
+    DialogActions,
+    DialogContent,
+    DialogTitle,
+    Divider,
+    Grid,
+    TextField,
+    Typography,
+} from "@mui/material";
 import ClientDto from "../../model/client/ClientDto.ts";
+import { useEffect, useState } from "react";
+import useInterceptedFetch from "../../hook/useInterceptedFetch.ts";
+import API_ENDPOINTS from "../../util/endpoint/ApiEndpoint.ts";
 
 interface MemberInformationComponentProps {
     member: ClientDto;
@@ -8,31 +24,158 @@ interface MemberInformationComponentProps {
 const MemberInformationComponent = ({
     member,
 }: MemberInformationComponentProps) => {
+    const [walletBalance, setWalletBalance] = useState<number | null>(null);
+    const [dialogOpen, setDialogOpen] = useState(false);
+    const [topUpAmount, setTopUpAmount] = useState("");
+    const interceptedFetch = useInterceptedFetch();
+
+    const fetchWallet = async () => {
+        const endpoint = API_ENDPOINTS.wallet.replace(
+            ":id",
+            member.id.toString()
+        );
+
+        try {
+            const res = await interceptedFetch({
+                endpoint: endpoint,
+                reqInit: {
+                    method: "GET",
+                },
+            });
+            const data = await res.json();
+            setWalletBalance(data.money);
+        } catch (error) {
+            console.error("Błąd pobierania portfela:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (!member?.id) return;
+        fetchWallet();
+    }, [member?.id]);
+
+    const handleTopUp = async () => {
+        const endpoint = API_ENDPOINTS.addMoney.replace(
+            ":id",
+            member.id.toString()
+        );
+
+        const amount = parseFloat(topUpAmount);
+
+        if (isNaN(amount) || amount <= 0) {
+            alert("Kwota musi być liczbą dodatnią!");
+            return;
+        }
+
+        try {
+            const res = await interceptedFetch({
+                endpoint: endpoint,
+                reqInit: {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        amount: amount,
+                        description: "Top-up via panel",
+                    }),
+                },
+            });
+            const updated = await res.json();
+            setWalletBalance(updated.money);
+            setDialogOpen(false);
+            setTopUpAmount("");
+        } catch (error) {
+            console.error("Błąd doładowania portfela:", error);
+        }
+    };
+
     return (
-        <Card sx={{ mb: 2, p: 2 }}>
-            <Grid container spacing={2} alignItems="center">
-                <Grid>
-                    <Avatar sx={{ width: 100, height: 100 }} />
-                </Grid>
-                <Divider orientation="vertical" flexItem variant="middle" />
-                <Grid>
-                    <Typography variant="h5">{`${member.firstName} ${member.lastName}`}</Typography>
-                    <Typography variant="body2">Role: {member.role.toLowerCase()}</Typography>
+        <>
+            <Card
+                sx={{
+                    mb: 2,
+                    p: 2,
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}
+            >
+                <Box sx={{ display: "flex", alignItems: "center" }}>
+                    <Avatar sx={{ width: 100, height: 100, mr: 2 }} />
+                    <Divider orientation="vertical" flexItem sx={{ mx: 2 }} />
+                    <Box>
+                        <Typography variant="h5">{`${member.firstName} ${member.lastName}`}</Typography>
+                        <Typography variant="body2">
+                            Role: {member.role.toLowerCase()}
+                        </Typography>
+                        <Typography
+                            variant="body2"
+                            sx={{
+                                fontWeight: 600,
+                                color: member.isActive ? "green" : "red",
+                            }}
+                        >
+                            {member.isActive
+                                ? "Active account"
+                                : "Inactive account"}
+                        </Typography>
+                        <Typography variant="body2">
+                            Adres: {member.email}
+                        </Typography>
+                    </Box>
+                </Box>
+
+                <Box sx={{ textAlign: "right" }}>
                     <Typography
                         variant="body2"
-                        style={{ color: member.isActive ? "green" : "red" }}
-                        sx={{ fontWeight: 600 }}
+                        sx={{ mb: 1, fontSize: "1.2rem" }}
                     >
-                        {member.isActive
-                            ? "Active account"
-                            : "Inactive account"}
+                        Wallet balance:{" "}
+                        {typeof walletBalance === "number" ? (
+                            <Box component="span" sx={{ fontWeight: 700 }}>
+                                {walletBalance.toFixed(2)} zł
+                            </Box>
+                        ) : (
+                            "Ładowanie..."
+                        )}
                     </Typography>
-                    <Typography variant="body2">
-                        Adres: {member.email}
-                    </Typography>
-                </Grid>
-            </Grid>
-        </Card>
+
+                    <Button
+                        variant="contained"
+                        color="primary"
+                        onClick={() => setDialogOpen(true)}
+                    >
+                        Add funds
+                    </Button>
+                </Box>
+            </Card>
+
+            {/* Dialog */}
+            <Dialog open={dialogOpen} onClose={() => setDialogOpen(false)}>
+                <DialogTitle>Add funds</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        label="Amount (PLN)"
+                        type="number"
+                        fullWidth
+                        value={topUpAmount}
+                        onChange={(e) => setTopUpAmount(e.target.value)}
+                        margin="dense"
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={() => setDialogOpen(false)}>Cancel</Button>
+                    <Button
+                        onClick={handleTopUp}
+                        variant="contained"
+                        color="primary"
+                    >
+                        Deposit
+                    </Button>
+                </DialogActions>
+            </Dialog>
+        </>
     );
 };
 export default MemberInformationComponent;

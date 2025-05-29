@@ -13,7 +13,7 @@ interface SimpleTransactionDto {
     id: number;
     totalPrice: number;
     completedAt: string;
-    transactionType: "PURCHASE" | "RETURN";
+    transactionType: "PURCHASE" | "RETURN" | "TOP_UP";
 }
 
 const LatestTransactionsComponent = ({
@@ -98,12 +98,16 @@ const LatestTransactionsComponent = ({
                                     color={
                                         txn.transactionType === "RETURN"
                                             ? "error"
+                                            : txn.transactionType === "TOP_UP"
+                                            ? "success"
                                             : "primary"
                                     }
-                                    sx={{fontWeight: 600}}
+                                    sx={{ fontWeight: 600 }}
                                 >
                                     {txn.transactionType === "RETURN"
                                         ? "Return"
+                                        : txn.transactionType === "TOP_UP"
+                                        ? "Top-up"
                                         : "Purchase"}
                                 </Typography>
                             </Box>
