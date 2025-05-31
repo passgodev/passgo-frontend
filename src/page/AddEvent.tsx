@@ -35,7 +35,7 @@ const AddEventPage = () => {
             return;
         }
 
-        fetch({ endpoint: ApiEndpoint.buildings })
+        fetch({ endpoint: `${ApiEndpoint.buildings}?status=APPROVED` })
             .then(res => res.json())
             .then(setBuildings);
     }, []);

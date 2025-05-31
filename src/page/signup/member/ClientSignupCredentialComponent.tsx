@@ -5,6 +5,7 @@ import AlertContext from '../../../context/AlertProvider.tsx';
 import API_ENDPOINTS from '../../../util/endpoint/ApiEndpoint.ts';
 import WEB_ENDPOINTS from '../../../util/endpoint/WebEndpoint.ts';
 import HttpMethod from '../../../util/HttpMethod.ts';
+import logger from '../../../util/logger/Logger.ts';
 
 
 const ClientSignupCredentialComponent = (props: {handleSubmit: (func: () => void) => void}) => {
@@ -28,7 +29,7 @@ const ClientSignupCredentialComponent = (props: {handleSubmit: (func: () => void
         lastName: lastName,
         birthDate: birthDate,
     }
-    console.log('signupbody', signupBody);
+    logger.log('SignupPage', 'Signup body', signupBody);
 
     const handleSubmit = async () => {
         const headers = new Headers();
@@ -42,11 +43,21 @@ const ClientSignupCredentialComponent = (props: {handleSubmit: (func: () => void
                 headers: headers
             }
         ).then((res) => {
-            console.log('client signup response', res);
+            logger.log('SignupPage', 'Client signup response', res);
+
             if ( res.status === 200 ) {
+                logger.log('SignupPage', 'Client signup response - success');
                 showAlert(res.statusText, 'info');
                 navigate(WEB_ENDPOINTS.login);
+            } else {
+                const errorMessage = `${res.status} ${res.statusText}`;
+                logger.log('SignupPage', 'got status code !== 200', errorMessage);
+                showAlert(errorMessage, 'error');
             }
+        }).catch((err) => {
+            const errorMessage = `Error occured from signup request', ${err}`;
+            logger.log('SignupPage', errorMessage);
+            showAlert(errorMessage, 'error');
         });
     }
 

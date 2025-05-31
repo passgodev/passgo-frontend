@@ -7,9 +7,12 @@ import MemberType from '../../model/member/MemberType.ts';
 import Privilege from '../../model/member/Privilege.ts';
 import OrganizerDto from '../../model/organizer/OrganizerDto.ts';
 import API_ENDPOINTS from '../../util/endpoint/ApiEndpoint.ts';
+import { loggerPrelogWithFactory } from '../../util/logger/Logger.ts';
 import ClientInfoComponent from './client/ClientInfoComponent.tsx';
 import OrganizerInfoPage from './organizer/OrganizerInfoPage.tsx';
 
+
+const logger = loggerPrelogWithFactory('[ActiveMemberProfilePage]');
 
 const ActiveMemberProfilePage = () => {
     const interceptedFetch = useInterceptedFetch();
@@ -34,19 +37,21 @@ const ActiveMemberProfilePage = () => {
         const endpoint = API_ENDPOINTS.memberById
             .replace(':id', auth.memberId ?? '-1')
             .replace(':memberType', MemberType[privilegeType!]);
-        console.log('ActiveMemberProfilePage - useEffect invoked', 'endpoint', endpoint);
+        logger.log('ActiveMemberProfilePage - useEffect invoked', 'endpoint', endpoint);
 
         interceptedFetch({endpoint})
             .then(res => res.json())
             .then(json => {
-                console.log('ActiveMemberProfilePage - returned json', json);
+                logger.log('ActiveMemberProfilePage - returned json', json);
                 setMember(json)
             })
             .catch(err => {
-                console.log('ActiveMemberProfilePage - err', err)
+                logger.log('ActiveMemberProfilePage - err', err)
                 showAlert(err, 'error');
             });
     }, []);
+
+    logger.log(member);
 
     const pickProperComponent = (privilege: Privilege): ReactNode => {
         switch (privilege) {

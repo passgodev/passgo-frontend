@@ -1,19 +1,14 @@
-import useInterceptedFetch from '../hook/useInterceptedFetch.ts';
-import API_ENDPOINTS from '../util/endpoint/ApiEndpoint.ts';
-import HttpMethod from '../util/HttpMethod.ts';
+import { Box, Paper, Typography } from '@mui/material';
+import EventCard from '../component/EventCard.tsx';
+import EventsPage from './Events.tsx';
 
 
 const Home = () => {
-    const intercFetch = useInterceptedFetch();
+    // const intercFetch = useInterceptedFetch();
 
     return (
         <>
-            <div>Home</div>
-            <button onClick={() => intercFetch({
-                endpoint: API_ENDPOINTS.health,
-                reqInit: {
-                    method: HttpMethod.GET,
-            }})}>Health</button>
+            <EventsPage></EventsPage>
         </>
     );
 };

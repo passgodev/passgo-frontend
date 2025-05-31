@@ -66,19 +66,12 @@ const Layout = () => {
                     <Toolbar />
                     <Box sx={{ overflow: "auto" }}>
                         <List>
-                            <ListItemButton
-                                component={Link}
-                                to={WEB_ENDPOINTS.transaction}
-                            >
-                                <ListItemText primary="Transactions" />
-                            </ListItemButton>
-
-                            <ListItemButton
-                                component={Link}
-                                to={WEB_ENDPOINTS.faq}
-                            >
-                                <ListItemText primary="FAQ" />
-                            </ListItemButton>
+                            {/*<ListItemButton*/}
+                            {/*    component={Link}*/}
+                            {/*    to={WEB_ENDPOINTS.transaction}*/}
+                            {/*>*/}
+                            {/*    <ListItemText primary="Transactions" />*/}
+                            {/*</ListItemButton>*/}
 
                             <ListItemButton
                                 component={Link}
@@ -87,18 +80,29 @@ const Layout = () => {
                                 <ListItemText primary="Events" />
                             </ListItemButton>
 
-                            <ListItemButton
-                                component={Link}
-                                to={WEB_ENDPOINTS.eventsManagement}
+                            <EnableOnRole
+                                allowedRoles={[Privilege.ORGANIZER]}
                             >
-                                <ListItemText primary="Events Management" />
-                            </ListItemButton>
+                                <ListItemButton
+                                    component={Link}
+                                    to={WEB_ENDPOINTS.eventsManagement}
+                                >
+                                    <ListItemText primary="Events Management" />
+                                </ListItemButton>
+                            </EnableOnRole>
 
                             <ListItemButton
                                 component={Link}
                                 to={WEB_ENDPOINTS.building}
                             >
                                 <ListItemText primary="Building" />
+                            </ListItemButton>
+
+                            <ListItemButton
+                                component={Link}
+                                to={WEB_ENDPOINTS.faq}
+                            >
+                                <ListItemText primary="FAQ" />
                             </ListItemButton>
 
                             <EnableOnRole
