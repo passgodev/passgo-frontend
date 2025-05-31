@@ -28,6 +28,7 @@ const columns: GridColDef<TransactionDto>[] = [
         headerName: 'Client',
         width: 150,
         renderCell: (cell) => {
+            logger.log('transactions', cell.formattedValue);
             const {id, firstName, lastName} = cell.formattedValue;
             return <Typography component={Link} to={WEB_ENDPOINTS.clientById.replace(':id', id)}>
                 {firstName + ' ' + lastName}
