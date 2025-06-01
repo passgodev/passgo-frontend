@@ -8,18 +8,25 @@ import {
     DialogContent,
     DialogTitle,
     Divider,
-    Grid,
     TextField,
-    Typography,
+    Typography
 } from "@mui/material";
-import ClientDto from "../../model/client/ClientDto.ts";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import AlertContext from '../../context/AlertProvider.tsx';
 import useInterceptedFetch from "../../hook/useInterceptedFetch.ts";
+import ClientDto from "../../model/client/ClientDto.ts";
+import Privilege from '../../model/member/Privilege.ts';
 import API_ENDPOINTS from "../../util/endpoint/ApiEndpoint.ts";
+import { loggerPrelogWithFactory } from '../../util/logger/Logger.ts';
+import EnableOnRole from '../EnableOnRole.tsx';
+
 
 interface MemberInformationComponentProps {
     member: ClientDto;
 }
+
+const logger = loggerPrelogWithFactory('[memberInformationComponent]')
+
 
 const MemberInformationComponent = ({
     member,
@@ -28,6 +35,7 @@ const MemberInformationComponent = ({
     const [dialogOpen, setDialogOpen] = useState(false);
     const [topUpAmount, setTopUpAmount] = useState("");
     const interceptedFetch = useInterceptedFetch();
+    const { showAlert } = useContext(AlertContext);
 
     const fetchWallet = async () => {
         const endpoint = API_ENDPOINTS.wallet.replace(
@@ -42,8 +50,19 @@ const MemberInformationComponent = ({
                     method: "GET",
                 },
             });
-            const data = await res.json();
-            setWalletBalance(data.money);
+
+            if ( res.status == 200 ) {
+                const data = await res.json();
+                setWalletBalance(data.money);
+            } else if ( res.status === 403 ) {
+                setWalletBalance(null);
+                logger.log('Not enough permissions', res)
+                showAlert('Not enough permissions', 'error');
+            } else {
+                setWalletBalance(null);
+                logger.log('Could not load wallet amount', res)
+                showAlert('Could not load wallet amount', 'error');
+            }
         } catch (error) {
             console.error("Błąd pobierania portfela:", error);
         }
@@ -63,7 +82,7 @@ const MemberInformationComponent = ({
         const amount = parseFloat(topUpAmount);
 
         if (isNaN(amount) || amount <= 0) {
-            alert("Kwota musi być liczbą dodatnią!");
+            showAlert('Amount should be positive number', 'error');
             return;
         }
 
@@ -126,29 +145,31 @@ const MemberInformationComponent = ({
                     </Box>
                 </Box>
 
-                <Box sx={{ textAlign: "right" }}>
-                    <Typography
-                        variant="body2"
-                        sx={{ mb: 1, fontSize: "1.2rem" }}
-                    >
-                        Wallet balance:{" "}
-                        {typeof walletBalance === "number" ? (
-                            <Box component="span" sx={{ fontWeight: 700 }}>
-                                {walletBalance.toFixed(2)} zł
-                            </Box>
-                        ) : (
-                            "Ładowanie..."
-                        )}
-                    </Typography>
+                <EnableOnRole allowedRoles={[Privilege.CLIENT, Privilege.ADMINISTRATOR]} >
+                    <Box sx={{ textAlign: "right" }}>
+                        <Typography
+                            variant="body2"
+                            sx={{ mb: 1, fontSize: "1.2rem" }}
+                        >
+                            Wallet balance:{" "}
+                            {typeof walletBalance === "number" ? (
+                                <Box component="span" sx={{ fontWeight: 700 }}>
+                                    {walletBalance.toFixed(2)} zł
+                                </Box>
+                            ) : (
+                                "Loading..."
+                            )}
+                        </Typography>
 
-                    <Button
-                        variant="contained"
-                        color="primary"
-                        onClick={() => setDialogOpen(true)}
-                    >
-                        Add funds
-                    </Button>
-                </Box>
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            onClick={() => setDialogOpen(true)}
+                        >
+                            Add funds
+                        </Button>
+                    </Box>
+                </EnableOnRole>
             </Card>
 
             {/* Dialog */}
