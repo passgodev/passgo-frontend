@@ -26,7 +26,7 @@ const EventsPage = () => {
         const fetchEventsWithImages = async () => {
             try {
                 const res = await InterceptedFetch({
-                    endpoint: ApiEndpoints.events,
+                    endpoint: ApiEndpoints.approvedEvents,
                 });
                 const data: EventItem[] = await res.json();
 

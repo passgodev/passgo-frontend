@@ -14,6 +14,7 @@ const API_ENDPOINTS = {
     memberById: endpointCreator('/members/:id?type=:memberType'),
     activateOrganizer: endpointCreator('/members/organizers/:id/activation'),
     events: endpointCreator('/events'),
+    approvedEvents: endpointCreator('/events?status=APPROVED'),
     organizerEvents: endpointCreator('/events/:id/organizer'),
     eventImage: endpointCreator('/events/:id/image'),
     buildings: endpointCreator('/buildings'),

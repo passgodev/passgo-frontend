@@ -81,7 +81,7 @@ const Layout = () => {
                             </ListItemButton>
 
                             <EnableOnRole
-                                allowedRoles={[Privilege.ORGANIZER]}
+                                allowedRoles={[Privilege.ORGANIZER, Privilege.ADMINISTRATOR]}
                             >
                                 <ListItemButton
                                     component={Link}
