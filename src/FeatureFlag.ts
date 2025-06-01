@@ -1,5 +1,7 @@
 const FeatureFlag = {
-    requireAuth: true
+    requireAuth: true,
+    requireRole: true,
+    roleEnabled: true
 }
 
 export default FeatureFlag;
