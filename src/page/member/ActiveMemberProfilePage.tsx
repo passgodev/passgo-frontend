@@ -40,7 +40,16 @@ const ActiveMemberProfilePage = () => {
         logger.log('ActiveMemberProfilePage - useEffect invoked', 'endpoint', endpoint);
 
         interceptedFetch({endpoint})
-            .then(res => res.json())
+            .then(async res => {
+                const returnedJson = await res.json()
+
+                if ( res.status === 200 ) {
+                    return returnedJson;
+                } else {
+                    const errorMessage = returnedJson?.message;
+                    showAlert(errorMessage, 'error');
+                }
+            })
             .then(json => {
                 logger.log('ActiveMemberProfilePage - returned json', json);
                 setMember(json)

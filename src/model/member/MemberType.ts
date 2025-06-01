@@ -1,6 +1,7 @@
 enum MemberType {
     CLIENT,
-    ORGANIZER
+    ORGANIZER,
+    ADMINISTRATOR
 };
 
 export default MemberType;
