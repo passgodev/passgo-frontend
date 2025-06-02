@@ -1,16 +1,16 @@
-import {
-    Box, Typography, TextField, Button, MenuItem, Grid, Paper
-} from "@mui/material";
-import {useContext, useEffect, useState} from "react";
+import { Box, Button, Grid, MenuItem, Paper, TextField, Typography } from "@mui/material";
+import dayjs from "dayjs";
+import { useContext, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import AlertContext from '../context/AlertProvider.tsx';
+import AuthContext from "../context/AuthProvider.tsx";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
+import { BuildingDto } from "../model/building/BuildingDto.ts";
+import { RowDto } from "../model/building/RowDto.ts";
+import Privilege from "../model/member/Privilege.ts";
 import ApiEndpoint from "../util/endpoint/ApiEndpoint";
 import WebEndpoint from "../util/endpoint/WebEndpoint";
-import dayjs from "dayjs";
-import {BuildingDto} from "../model/building/BuildingDto.ts";
-import {RowDto} from "../model/building/RowDto.ts";
-import AuthContext from "../context/AuthProvider.tsx";
-import Privilege from "../model/member/Privilege.ts";
+
 
 const AddEventPage = () => {
     const [name, setName] = useState("");
@@ -26,6 +26,7 @@ const AddEventPage = () => {
     const fetch = useInterceptedFetch();
     const navigate = useNavigate();
     const { auth } = useContext(AuthContext);
+    const { showAlert } = useContext(AlertContext);
     const role = auth.privilege;
     const organizerId = auth.memberId;
     console.log('organizerId: ', organizerId);
@@ -83,7 +84,7 @@ const AddEventPage = () => {
         if (!res.ok) {
             const errorData = await res.json();
             const errorText = errorData.message;
-            alert('Error: ' + errorText);
+            showAlert(errorText, 'error');
             return; 
         }
         else{
@@ -103,7 +104,7 @@ const AddEventPage = () => {
                 });
 
                 if (!imageRes.ok) {
-                    alert("Event created, but image upload failed.");
+                    showAlert("Event created, but image upload failed.", 'error');
                     return;
                 }
             }

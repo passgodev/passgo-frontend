@@ -2,9 +2,12 @@ import { Box, Paper, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 
 import EventCard from "../component/EventCard";
-import ApiEndpoints from "../util/endpoint/ApiEndpoint";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
+import ApiEndpoints from "../util/endpoint/ApiEndpoint";
 import API_ENDPOINTS from "../util/endpoint/ApiEndpoint";
+import HttpMethod from '../util/HttpMethod.ts';
+import { loggerPrelogWithFactory } from '../util/logger/Logger.ts';
+
 
 interface EventItem {
     id: number;
@@ -17,6 +20,9 @@ interface EventItem {
     imageUrl?: string;
 }
 
+const logger = loggerPrelogWithFactory('[Events]');
+
+
 const EventsPage = () => {
     const [events, setEvents] = useState<EventItem[]>([]);
 
@@ -27,26 +33,36 @@ const EventsPage = () => {
             try {
                 const res = await InterceptedFetch({
                     endpoint: ApiEndpoints.approvedEvents,
+                    reqInit: {
+                        method: HttpMethod.GET
+                    }
                 });
                 const data: EventItem[] = await res.json();
 
                 const eventsWithImages = await Promise.all(
                     data.map(async (event) => {
-                      
+
                         const endpoint = API_ENDPOINTS.eventImage.replace(
                             ":id",
                             event.id.toString()
                         );
 
                         try {
+                            logger.log('Fetching img, id:', event.id);
                             const imageRes = await InterceptedFetch({
                                 endpoint: endpoint,
+                                // reqInit: {
+                                //     method: HttpMethod.GET
+                                // }
                             });
 
-                            if (!imageRes.ok)
+                            if (!imageRes.ok) {
+                                logger.log('Image returned status !== 200', imageRes);
                                 throw new Error("Image not found");
+                            }
                             const blob = await imageRes.blob();
                             const imageUrl = URL.createObjectURL(blob);
+                            logger.log('Successfully fetched img for event, id:', event.id);
                             return { ...event, imageUrl };
                         } catch (err) {
                             console.warn(`No image for event ${event.id}`, err);
@@ -63,6 +79,8 @@ const EventsPage = () => {
 
         fetchEventsWithImages();
     }, []);
+
+    logger.log(events);
 
     return (
         <>

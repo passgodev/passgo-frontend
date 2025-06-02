@@ -40,6 +40,10 @@ const SignupPage = () => {
                 const membrType = MemberType[key];
                 const isActive = (membrType === currentMember);
 
+                if ( membrType === MemberType.ADMINISTRATOR ) {
+                    return;
+                }
+
                 return <Item key={i} onClick={() => setActiveMemberType(membrType)} sx={{backgroundColor: `${isActive ? 'primary.main' : 'white'}`, color: `${isActive ? 'white' : 'black'}`}}>{key}</Item>
             });
     }
