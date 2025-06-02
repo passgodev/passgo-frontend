@@ -1,4 +1,5 @@
 import { useLocation, useNavigate } from 'react-router-dom';
+import { retrieveExpiredAtDate } from '../util/AccessTokenUtil.ts';
 import { Endpoint } from '../util/endpoint/Endpoint.ts';
 import WEB_ENDPOINTS from '../util/endpoint/WebEndpoint.ts';
 import { loggerPrelogWithFactory } from '../util/logger/Logger.ts';
@@ -15,6 +16,20 @@ const MAX_RETRIES = 3;
 
 const logger = loggerPrelogWithFactory('[useInterceptedFetch]');
 
+const initializeRequestHeaders = (requestInit: RequestInit | undefined, authToken: string): RequestInit => {
+    if (requestInit === undefined) {
+        requestInit = {} as RequestInit;
+    }
+
+    const interceptedFetchHeaders = new Headers(requestInit.headers);
+    if (interceptedFetchHeaders.get('Authorization') == null) {
+        logger.log('appending missing "Authorization" header');
+        interceptedFetchHeaders.set('Authorization', `Bearer ${authToken}`);
+    }
+
+    requestInit.headers = interceptedFetchHeaders;
+    return requestInit;
+}
 
 const useInterceptedFetch = () => {
     const refresh = useRefreshToken();
@@ -24,55 +39,60 @@ const useInterceptedFetch = () => {
 
     let retries = MAX_RETRIES;
     const interceptedFetch = async ({ endpoint, reqInit }: useInterceptedFetchProps) => {
-        logger.log('invoked');
+        logger.log('invoked - fetching', endpoint);
 
-        const interceptedFetchHeaders = new Headers(reqInit?.headers);
-        if (interceptedFetchHeaders.get('Authorization') == null) {
-            interceptedFetchHeaders.set('Authorization', `Bearer ${auth.token}`);
-        }
-        logger.log('headers appended: ', interceptedFetchHeaders.get('Authorization'));
-
-        if ( reqInit !== undefined ) {
-            reqInit.headers = interceptedFetchHeaders;
-        }
+        reqInit = initializeRequestHeaders(reqInit, auth.token!);
 
         return fetch(endpoint, reqInit)
-            .then(async (res): Promise<Response> => {
+            .then(res => {
                 logger.log('Retries remaining: ', retries);
+                if (--retries < 0) {
+                    logger.log('Negative retries, aborting...');
+                    retries = MAX_RETRIES;
+                    return Promise.reject(`Already proccessed number of retries: ${MAX_RETRIES}`);
+                } else {
+                    return res;
+                }
+            })
+            .then(async (res): Promise<Response> => {
                 logger.log('Response', res);
                 logger.log('AuthObject', auth)
 
-                if (--retries < 0) {
-                    logger.log('Negative retries, aborting...');
-                    return Promise.reject(`Already proccessed number of retries: ${MAX_RETRIES}`);
-                }
-                const headers = res.headers;
-
                 if (res.status === 403) {
                     logger.log('Got status 403, FORBIDDEN, try to refresh accessToken');
-                    const newAccessToken = await refresh();
 
-                    if ( newAccessToken === undefined ) {
-                        logger.log('Access Token is undefined, probably expired', 'navigating to home page');
-                        navigate(WEB_ENDPOINTS.login, {state: {from: location}, replace: true});
+                    let accessToken = auth.token!;
+                    const doesTokenExpired = (retrieveExpiredAtDate(auth.token!) < new Date(Date.now()))
+                    if (doesTokenExpired) {
+                        const newAccessToken = await refresh();
+
+                        if ( newAccessToken === undefined ) {
+                            logger.log('Access Token is undefined, probably expired', 'navigating to home page');
+                            navigate(WEB_ENDPOINTS.login, {state: {from: location}, replace: true});
+                            return Promise.reject('Refresh token expired');
+                        } else {
+                            accessToken = newAccessToken;
+                        }
+
+                        reqInit = initializeRequestHeaders(reqInit, accessToken);
+                        return await interceptedFetch({ endpoint, reqInit });
+                    } else {
+                        logger.log('Endpoint returned 403, while logged in', 'insufficient permissions');
+                        return res;
                     }
-
-                    const newHeaders = new Headers(headers);
-                    newHeaders.set('Content-Type', 'application/json');
-                    newHeaders.set('Authorization', `Bearer ${newAccessToken}`);
-
-                    logger.log('Headers after token has been refreshed: ', newHeaders.get('Authorization'));
-
-                    return await interceptedFetch({endpoint: endpoint, reqInit: { ...reqInit, headers: newHeaders }});
                 } else {
                     logger.log('Successfully fetched resource. Response: ', res)
-                    retries = MAX_RETRIES;
                     return res;
                 }
-            });
+            })
+            .then(res => {
+                logger.log(`Restored retries from ${retries} to ${MAX_RETRIES}`);
+                retries = MAX_RETRIES;
+                return res;
+            })
     }
 
     return interceptedFetch;
-
 };
+
 export default useInterceptedFetch;

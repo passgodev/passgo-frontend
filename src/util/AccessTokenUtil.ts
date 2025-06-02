@@ -36,4 +36,15 @@ const retrieveMemberId = (accessToken: string): string => {
     return memberId;
 }
 
-export { transferMemberTypeToPrivilege, retrieveMemberId };
+const retrieveExpiredAtDate = (accessToken: string): Date => {
+    const payloadJson = parsePayloadAsJson(accessToken);
+    const expiredAtSeconds = payloadJson?.exp;
+    if ( expiredAtSeconds !== undefined ) {
+        const expiredAtMs = expiredAtSeconds * 1_000;
+        return new Date(expiredAtMs);
+    } else {
+        throw 'No exp property in jwt token';
+    }
+}
+
+export { transferMemberTypeToPrivilege, retrieveMemberId, retrieveExpiredAtDate };
