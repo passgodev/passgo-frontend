@@ -23,8 +23,7 @@ import AdminFaqPage from "./page/AdminFaqPage.tsx";
 import BuildingListPage from "./page/BuildingListPage.tsx";
 import EventDetailsPage from './page/EventDetailsPage.tsx';
 import FaqPage from "./page/FaqPage.tsx";
-import AdminClientListPage from "./page/member/AdminClientListPage.tsx";
-import AdminOrganizerListPage from "./page/member/AdminOrganizerListPage.tsx";
+import UserManagement from "./page/member/UserManagement.tsx";
 import TicketPurchasePage from "./page/TicketPurchasePage.tsx";
 import Transaction from "./page/transaction/Transaction.tsx";
 
@@ -65,8 +64,7 @@ const App = () => {
                     {/* ADMINS ONLY */}
                     <Route element={<RequireAuth allowedRoles={[Privilege.ADMINISTRATOR]} />}>
                         <Route path={WEB_ENDPOINTS.adminFaq} element={<AdminFaqPage />} />
-                        <Route path={WEB_ENDPOINTS.adminClientList} element={<AdminClientListPage />} />
-                        <Route path={WEB_ENDPOINTS.adminOrganizerList} element={<AdminOrganizerListPage />} />
+                        <Route path={WEB_ENDPOINTS.adminClientList} element={<UserManagement />} />
                     </Route>
 
                 </Route>
