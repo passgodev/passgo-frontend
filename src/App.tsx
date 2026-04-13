@@ -17,10 +17,9 @@ import Dashboard from "./page/Dashboard.tsx";
 import EventsHub from "./page/EventsHub.tsx";
 
 // Other Existing Pages
-import AddBuildingPage from "./page/AddBuilding.tsx";
 import AddEventPage from "./page/AddEvent.tsx";
 import AdminFaqPage from "./page/AdminFaqPage.tsx";
-import BuildingListPage from "./page/BuildingListPage.tsx";
+import BuildingHub from "./page/BuildingHub.tsx";
 import EventDetailsPage from './page/EventDetailsPage.tsx';
 import FaqPage from "./page/FaqPage.tsx";
 import UserManagement from "./page/member/UserManagement.tsx";
@@ -56,8 +55,8 @@ const App = () => {
                     {/* ORGANIZERS & ADMINS ONLY */}
                     <Route element={<RequireAuth allowedRoles={[Privilege.ORGANIZER, Privilege.ADMINISTRATOR]} />}>
                         <Route path={WEB_ENDPOINTS.addEvent} element={<AddEventPage />} />
-                        <Route path={WEB_ENDPOINTS.building} element={<BuildingListPage />} />
-                        <Route path={WEB_ENDPOINTS.addBuilding} element={<AddBuildingPage />} />
+                        <Route path={WEB_ENDPOINTS.building} element={<BuildingHub />} />
+                        <Route path={WEB_ENDPOINTS.addBuilding} element={<BuildingHub />} />
                         <Route path={WEB_ENDPOINTS.eventsManagement} element={<Navigate to={WEB_ENDPOINTS.events} replace />} />
                     </Route>
 
