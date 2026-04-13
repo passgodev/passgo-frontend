@@ -6,32 +6,15 @@ import { loggerPrelogWithFactory } from '../util/logger/Logger.ts';
 import useAuth from './useAuth.ts';
 import useRefreshToken from './useRefreshToken.ts';
 
-
 interface useInterceptedFetchProps {
-    endpoint: Endpoint,
-    reqInit?: RequestInit
+    endpoint: Endpoint;
+    reqInit?: RequestInit;
+    _retryCount?: number;     // Internal: safely tracks retries per-request
+    _tokenOverride?: string;  // Internal: bypasses React's async state delay during refresh
 }
 
 const MAX_RETRIES = 3;
-
 const logger = loggerPrelogWithFactory('[useInterceptedFetch]');
-
-const initializeRequestHeaders = (requestInit: RequestInit | undefined, authToken: string | undefined): RequestInit => {
-    if (requestInit === undefined) {
-        requestInit = {} as RequestInit;
-    }
-
-    const interceptedFetchHeaders = new Headers(requestInit.headers);
-    
-    // ONLY append the header if the token actually exists (is not undefined/null)
-    if (interceptedFetchHeaders.get('Authorization') == null && authToken) {
-        logger.log('appending missing "Authorization" header');
-        interceptedFetchHeaders.set('Authorization', `Bearer ${authToken}`);
-    }
-
-    requestInit.headers = interceptedFetchHeaders;
-    return requestInit;
-}
 
 const useInterceptedFetch = () => {
     const refresh = useRefreshToken();
@@ -39,60 +22,81 @@ const useInterceptedFetch = () => {
     const navigate = useNavigate();
     const location = useLocation();
 
-    let retries = MAX_RETRIES;
-    const interceptedFetch = async ({ endpoint, reqInit }: useInterceptedFetchProps) => {
-        logger.log('invoked - fetching', endpoint);
+    const interceptedFetch = async ({ 
+        endpoint, 
+        reqInit, 
+        _retryCount = 0, 
+        _tokenOverride 
+    }: useInterceptedFetchProps): Promise<Response> => {
+        
+        logger.log(`invoked - fetching (Retry: ${_retryCount})`, endpoint);
 
-        reqInit = initializeRequestHeaders(reqInit, auth.token);
+        if (_retryCount >= MAX_RETRIES) {
+            logger.log('Max retries reached, aborting...');
+            return Promise.reject(`Already processed number of retries: ${MAX_RETRIES}`);
+        }
 
-        return fetch(endpoint, reqInit)
-            .then(res => {
-                logger.log('Retries remaining: ', retries);
-                if (--retries < 0) {
-                    logger.log('Negative retries, aborting...');
-                    retries = MAX_RETRIES;
-                    return Promise.reject(`Already proccessed number of retries: ${MAX_RETRIES}`);
-                } else {
-                    return res;
+        // 1. Create fresh copies to avoid mutating the original object across retries
+        const init = reqInit ? { ...reqInit } : {};
+        const headers = new Headers(init.headers);
+
+        // 2. ALWAYS set the Authorization header. 
+        // We use _tokenOverride if we just refreshed, otherwise fallback to React state.
+        const currentToken = _tokenOverride || auth?.token;
+        if (currentToken) {
+            headers.set('Authorization', `Bearer ${currentToken}`);
+        }
+
+        init.headers = headers;
+
+        try {
+            // 3. Execute the fetch
+            const res = await fetch(endpoint, init);
+
+            // 4. Spring Boot usually returns 401 for expired tokens (sometimes 403)
+            if (res.status === 401 || res.status === 403) {
+                logger.log(`Got status ${res.status}, checking if token expired`);
+
+                if (!auth?.token) {
+                    return res; // We aren't logged in, just return the 403/401
                 }
-            })
-            .then(async (res): Promise<Response> => {
-                logger.log('Response', res);
-                logger.log('AuthObject', auth)
 
-                if (res.status === 403) {
-                    logger.log('Got status 403, FORBIDDEN, try to refresh accessToken');
+                const isTokenExpired = retrieveExpiredAtDate(auth?.token) < new Date();
 
-                    let accessToken = auth.token!;
-                    const doesTokenExpired = (retrieveExpiredAtDate(auth.token!) < new Date(Date.now()))
-                    if (doesTokenExpired) {
-                        const newAccessToken = await refresh();
+                if (isTokenExpired) {
+                    logger.log('Token IS expired! Attempting to refresh...');
+                    const newAccessToken = await refresh();
 
-                        if ( newAccessToken === undefined ) {
-                            logger.log('Access Token is undefined, probably expired', 'navigating to home page');
-                            navigate(WEB_ENDPOINTS.login, {state: {from: location}, replace: true});
-                            return Promise.reject('Refresh token expired');
-                        } else {
-                            accessToken = newAccessToken;
-                        }
-
-                        reqInit = initializeRequestHeaders(reqInit, accessToken);
-                        return await interceptedFetch({ endpoint, reqInit });
-                    } else {
-                        logger.log('Endpoint returned 403, while logged in', 'insufficient permissions');
-                        return res;
+                    if (!newAccessToken) {
+                        logger.log('Refresh failed. Session dead. Navigating to login.');
+                        navigate(WEB_ENDPOINTS.login, { state: { from: location }, replace: true });
+                        return Promise.reject('Refresh token expired or invalid');
                     }
+
+                    logger.log('Refresh successful! Retrying original request with new token.');
+                    
+                    // 5. Recurse! Pass the new token into _tokenOverride so we don't wait for React to re-render
+                    return await interceptedFetch({ 
+                        endpoint, 
+                        reqInit: init, 
+                        _retryCount: _retryCount + 1, 
+                        _tokenOverride: newAccessToken 
+                    });
                 } else {
-                    logger.log('Successfully fetched resource. Response: ', res)
+                    logger.log(`Endpoint returned ${res.status}, but token is valid. Insufficient permissions.`);
                     return res;
                 }
-            })
-            .then(res => {
-                logger.log(`Restored retries from ${retries} to ${MAX_RETRIES}`);
-                retries = MAX_RETRIES;
-                return res;
-            })
-    }
+            }
+
+            // If it's not a 401/403, just return the successful (or 404/500) response
+            logger.log('Successfully fetched resource. Response: ', res.status);
+            return res;
+
+        } catch (error) {
+            logger.log('Network error encountered', error);
+            throw error;
+        }
+    };
 
     return interceptedFetch;
 };

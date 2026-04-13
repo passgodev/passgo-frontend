@@ -3,6 +3,12 @@ import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 import useAuth from "../../hook/useAuth.ts";
 import Privilege from "../../model/member/Privilege.ts";
 import WEB_ENDPOINTS from "../../util/endpoint/WebEndpoint.ts";
+import { useState } from "react";
+
+
+
+
+
 
 const Layout = () => {
     const { auth } = useAuth();
@@ -12,6 +18,18 @@ const Layout = () => {
     const isClient = auth?.privilege === Privilege.CLIENT;
     const isOrganizer = auth?.privilege === Privilege.ORGANIZER;
     const isAdmin = auth?.privilege === Privilege.ADMINISTRATOR;
+
+    // 2. Inside your Layout component, add this state:
+    const [searchQuery, setSearchQuery] = useState("");
+
+    // 3. Add this function to handle the Enter key:
+    const handleSearch = (e: React.KeyboardEvent<HTMLInputElement>) => {
+        if (e.key === "Enter" && searchQuery.trim() !== "") {
+            navigate(`${WEB_ENDPOINTS.events}?q=${encodeURIComponent(searchQuery)}`);
+        } else if (e.key === "Enter" && searchQuery.trim() === "") {
+            navigate(WEB_ENDPOINTS.events); // Clear search
+        }
+    };
 
     const handleLogout = (e: React.MouseEvent) => {
         e.preventDefault();
@@ -96,11 +114,14 @@ const Layout = () => {
                         {/* Interactive Search Bar */}
                         <div className="relative max-w-md w-full">
                             <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 text-sm">search</span>
-                            <input 
-                                type="text" 
-                                placeholder="Filter events by name, host, or venue..." 
-                                className="w-full bg-surface-container-low border border-transparent text-xs pl-9 py-1.5 focus:border-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary rounded-sm transition-all"
-                            />
+                                <input 
+                                    type="text" 
+                                    placeholder="Filter events by name..." 
+                                    value={searchQuery}
+                                    onChange={(e) => setSearchQuery(e.target.value)}
+                                    onKeyDown={handleSearch}
+                                    className="w-full bg-surface-container-low border border-transparent text-xs pl-9 py-1.5 focus:border-primary focus:bg-white focus:outline-none focus:ring-1 focus:ring-primary rounded-sm transition-all"
+                                />
                         </div>
                     </div>
 
