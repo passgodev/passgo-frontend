@@ -16,13 +16,15 @@ const MAX_RETRIES = 3;
 
 const logger = loggerPrelogWithFactory('[useInterceptedFetch]');
 
-const initializeRequestHeaders = (requestInit: RequestInit | undefined, authToken: string): RequestInit => {
+const initializeRequestHeaders = (requestInit: RequestInit | undefined, authToken: string | undefined): RequestInit => {
     if (requestInit === undefined) {
         requestInit = {} as RequestInit;
     }
 
     const interceptedFetchHeaders = new Headers(requestInit.headers);
-    if (interceptedFetchHeaders.get('Authorization') == null) {
+    
+    // ONLY append the header if the token actually exists (is not undefined/null)
+    if (interceptedFetchHeaders.get('Authorization') == null && authToken) {
         logger.log('appending missing "Authorization" header');
         interceptedFetchHeaders.set('Authorization', `Bearer ${authToken}`);
     }
@@ -41,7 +43,7 @@ const useInterceptedFetch = () => {
     const interceptedFetch = async ({ endpoint, reqInit }: useInterceptedFetchProps) => {
         logger.log('invoked - fetching', endpoint);
 
-        reqInit = initializeRequestHeaders(reqInit, auth.token!);
+        reqInit = initializeRequestHeaders(reqInit, auth.token);
 
         return fetch(endpoint, reqInit)
             .then(res => {
