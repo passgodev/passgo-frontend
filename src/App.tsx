@@ -25,6 +25,7 @@ import FaqPage from "./page/FaqPage.tsx";
 import UserManagement from "./page/member/UserManagement.tsx";
 import TicketPurchasePage from "./page/TicketPurchasePage.tsx";
 import Transaction from "./page/transaction/Transaction.tsx";
+import EventStatsPage from "./page/EventStatsPage.tsx";
 
 const App = () => {
     return (
@@ -54,6 +55,7 @@ const App = () => {
 
                     {/* ORGANIZERS & ADMINS ONLY */}
                     <Route element={<RequireAuth allowedRoles={[Privilege.ORGANIZER, Privilege.ADMINISTRATOR]} />}>
+                        <Route path={WEB_ENDPOINTS.eventStats} element={<EventStatsPage />} />
                         <Route path={WEB_ENDPOINTS.addEvent} element={<AddEventPage />} />
                         <Route path={WEB_ENDPOINTS.building} element={<BuildingHub />} />
                         <Route path={WEB_ENDPOINTS.addBuilding} element={<BuildingHub />} />
