@@ -67,6 +67,13 @@ const Layout = () => {
                         </Link>
                     )}
 
+                    {(isOrganizer || isAdmin) && (
+                        <Link to={WEB_ENDPOINTS.eventStats} className={`flex items-center px-3 py-2 cursor-pointer transition-all duration-150 group rounded-sm ${location.pathname === WEB_ENDPOINTS.eventStats ? 'bg-slate-200/50 text-blue-700 border-l-4 border-blue-700' : 'text-slate-500 hover:bg-slate-200'}`}>
+                            <span className="material-symbols-outlined mr-3 text-[20px]">bar_chart</span>
+                            <span className="uppercase tracking-wider text-[11px] font-bold">Event Stats</span>
+                        </Link>
+                    )}
+
                     {isAdmin && (
                         <Link to={WEB_ENDPOINTS.adminClientList} className={`flex items-center px-3 py-2 cursor-pointer transition-all duration-150 group rounded-sm ${location.pathname.includes('admin') ? 'bg-slate-200/50 text-blue-700 border-l-4 border-blue-700' : 'text-slate-500 hover:bg-slate-200'}`}>
                             <span className="material-symbols-outlined mr-3 text-[20px]">group</span>
