@@ -175,7 +175,7 @@ const EventStatsPage = () => {
                     <table className="w-full text-left border-collapse min-w-[640px]">
                         <thead className="sticky top-0 z-10">
                             <tr className="bg-[#e1e9ee] border-b border-[#a9b4b9]">
-                                {['Event Name', 'Category', 'Tickets Number', 'Available Tickets', 'Arena Occupancy'].map(col => (
+                                {['Event Name', 'Category', 'Tickets Number', 'Available Tickets', 'Arena Occupancy', 'Date'].map(col => (
                                     <th key={col} className="px-4 py-2.5 text-[10px] font-bold uppercase tracking-widest text-[#566166] whitespace-nowrap">
                                         {col}
                                     </th>
@@ -227,6 +227,7 @@ const EventStatsPage = () => {
                                             <span className="font-mono text-[#2a3439]">{row.arenaOccupancy.toFixed(1)}%</span>
                                         </div>
                                     </td>
+                                    <td className="px-4 py-3 text-xs text-[#2a3439] font-mono">{row.date}</td>
                                 </tr>
                             ))}
                         </tbody>

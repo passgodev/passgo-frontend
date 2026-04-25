@@ -6,6 +6,7 @@ export interface StatsResponse {
     ticketsNumber: number;
     availableTickets: number;
     arenaOccupancy: number;
+    date: string;
 }
 
 export interface FullStatsResponse {
