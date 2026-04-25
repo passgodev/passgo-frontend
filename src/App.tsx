@@ -48,7 +48,9 @@ const App = () => {
 
                     {/* PROTECTED ROUTES (Must be logged in) */}
                     <Route element={<RequireAuth />}>
-                        <Route path={WEB_ENDPOINTS.activeMemberProfile} element={<Dashboard />} />
+                        <Route element={<RequireAuth allowedRoles={[Privilege.CLIENT, Privilege.ORGANIZER]} />}>
+                            <Route path={WEB_ENDPOINTS.activeMemberProfile} element={<Dashboard />} />
+                        </Route>
                         <Route path={WEB_ENDPOINTS.buyTickets} element={<TicketPurchasePage />} />
                         <Route path={WEB_ENDPOINTS.transaction} element={<Transaction />} />
                     </Route>
