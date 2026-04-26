@@ -1,5 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import useInterceptedFetch from "../hook/useInterceptedFetch.ts";
+import useManageFaq from "../hook/useManageFaq.ts";
 import AuthContext from "../context/AuthProvider.tsx";
 import Privilege from "../model/member/Privilege.ts";
 import API_ENDPOINTS from "../util/endpoint/ApiEndpoint.ts";
@@ -14,12 +15,14 @@ const FaqPage = () => {
     const { auth } = useContext(AuthContext);
     const isAdmin = auth?.privilege === Privilege.ADMINISTRATOR;
     const interceptedFetch = useInterceptedFetch();
+    const { updateFaq, deleteFaq } = useManageFaq();
 
     const [faqs, setFaqs] = useState<Faq[]>([]);
     const [openId, setOpenId] = useState<number | null>(null);
-    
+
     // Admin States
     const [isDialogOpen, setIsDialogOpen] = useState(false);
+    const [editingFaq, setEditingFaq] = useState<Faq | null>(null);
     const [formData, setFormData] = useState({ question: "", answer: "" });
 
     const loadFaqs = async () => {
@@ -27,12 +30,7 @@ const FaqPage = () => {
             const res = await interceptedFetch({ endpoint: API_ENDPOINTS.faq });
             if (res.ok) {
                 const data = await res.json();
-                
-                // --- THE FIX ---
-                // If it's an array, use it. 
-                // If it's a Spring Page object, use data.content. 
-                // Otherwise, default to an empty array.
-                const faqArray = Array.isArray(data) ? data : (data?.content || []);
+                const faqArray = (data?.content || []);
                 setFaqs(faqArray);
             }
         } catch (error) {
@@ -43,21 +41,44 @@ const FaqPage = () => {
 
     useEffect(() => { loadFaqs(); }, []);
 
+    const openCreateDialog = () => {
+        setEditingFaq(null);
+        setFormData({ question: "", answer: "" });
+        setIsDialogOpen(true);
+    };
+
+    const openEditDialog = (faq: Faq) => {
+        setEditingFaq(faq);
+        setFormData({ question: faq.question, answer: faq.answer });
+        setIsDialogOpen(true);
+    };
+
+    const closeDialog = () => {
+        setIsDialogOpen(false);
+        setEditingFaq(null);
+        setFormData({ question: "", answer: "" });
+    };
+
     const handleSave = async () => {
-        const method = "POST"; // or PUT if editing
-        const res = await interceptedFetch({
-            endpoint: API_ENDPOINTS.faq,
-            reqInit: {
-                method,
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(formData)
-            }
-        });
-        if (res.ok) {
-            setIsDialogOpen(false);
-            setFormData({ question: "", answer: "" });
-            loadFaqs();
+        if (editingFaq) {
+            await updateFaq(editingFaq.id, formData);
+        } else {
+            await interceptedFetch({
+                endpoint: API_ENDPOINTS.faq,
+                reqInit: {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(formData)
+                }
+            });
         }
+        closeDialog();
+        loadFaqs();
+    };
+
+    const handleDelete = async (faqId: number) => {
+        await deleteFaq(faqId);
+        loadFaqs();
     };
 
     return (
@@ -73,8 +94,8 @@ const FaqPage = () => {
                         </p>
                     </div>
                     {isAdmin && (
-                        <button 
-                            onClick={() => setIsDialogOpen(true)}
+                        <button
+                            onClick={openCreateDialog}
                             className="bg-primary text-white px-6 py-2.5 text-[11px] font-bold uppercase tracking-widest rounded-sm hover:bg-primary-dim transition-all shadow-sm flex items-center"
                         >
                             <span className="material-symbols-outlined text-sm mr-2">add</span>
@@ -107,7 +128,7 @@ const FaqPage = () => {
                                 <span className="text-[10px] font-mono font-bold text-primary bg-blue-50 px-2 py-1 rounded-sm">
                                     0{index + 1}
                                 </span>
-                                <span className="text-sm font-bold text-slate-800 uppercase tracking-tight">
+                                <span className="text-sm font-bold text-[23px] text-slate-800 uppercase tracking-tight">
                                     {faq.question}
                                 </span>
                             </div>
@@ -120,24 +141,17 @@ const FaqPage = () => {
                             <div className="px-5 pb-6 pt-2 border-t border-slate-50 animation-slide-down">
                                 <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
                                     <div className="md:col-span-3">
-                                        <p className="text-slate-600 text-[13px] leading-relaxed mb-4">
+                                        <p className="text-slate-600 text-[18px] leading-relaxed mb-4">
                                             {faq.answer}
                                         </p>
-                                        <div className="flex gap-2">
-                                            <span className="text-[9px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-sm uppercase">Logistics</span>
-                                            <span className="text-[9px] font-bold bg-slate-100 text-slate-500 px-2 py-0.5 rounded-sm uppercase">Safety</span>
-                                        </div>
                                     </div>
                                     <div className="bg-slate-50 p-4 border-l-2 border-slate-200">
-                                        <p className="text-[9px] font-bold text-slate-400 uppercase mb-2">Internal Ref</p>
-                                        <p className="text-[10px] font-mono font-bold text-slate-700 uppercase">PR-HAZ-2024-0{faq.id}</p>
-                                        
                                         {isAdmin && (
                                             <div className="mt-6 flex gap-2">
-                                                <button className="p-1.5 text-slate-400 hover:text-primary transition-colors">
+                                                <button onClick={() => openEditDialog(faq)} className="p-1.5 text-slate-400 hover:text-primary transition-colors">
                                                     <span className="material-symbols-outlined text-lg">edit</span>
                                                 </button>
-                                                <button className="p-1.5 text-slate-400 hover:text-error transition-colors">
+                                                <button onClick={() => handleDelete(faq.id)} className="p-1.5 text-slate-400 hover:text-error transition-colors">
                                                     <span className="material-symbols-outlined text-lg">delete</span>
                                                 </button>
                                             </div>
@@ -155,8 +169,8 @@ const FaqPage = () => {
                 <div className="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
                     <div className="bg-white w-full max-w-xl rounded-sm shadow-2xl border border-slate-300 animation-fade-in">
                         <div className="p-6 border-b border-slate-100 flex justify-between items-center">
-                            <h2 className="text-sm font-black uppercase tracking-widest text-slate-900">Define New Protocol</h2>
-                            <button onClick={() => setIsDialogOpen(false)} className="material-symbols-outlined text-slate-400 hover:text-slate-600">close</button>
+                            <h2 className="text-sm font-black uppercase tracking-widest text-slate-900">{editingFaq ? "Edit Protocol" : "Define New Protocol"}</h2>
+                            <button onClick={closeDialog} className="material-symbols-outlined text-slate-400 hover:text-slate-600">close</button>
                         </div>
                         <div className="p-8 space-y-6">
                             <div>
@@ -181,8 +195,8 @@ const FaqPage = () => {
                             </div>
                         </div>
                         <div className="p-6 bg-slate-50 flex justify-end gap-3 border-t border-slate-100">
-                            <button onClick={() => setIsDialogOpen(false)} className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-800">Discard</button>
-                            <button onClick={handleSave} className="bg-primary text-white px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-sm hover:bg-primary-dim shadow-md">Deploy Protocol</button>
+                            <button onClick={closeDialog} className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-800">Discard</button>
+                            <button onClick={handleSave} className="bg-primary text-white px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-sm hover:bg-primary-dim shadow-md">{editingFaq ? "Save Changes" : "Deploy Protocol"}</button>
                         </div>
                     </div>
                 </div>

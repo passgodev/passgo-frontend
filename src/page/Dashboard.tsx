@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import {useEffect, useState} from "react";
 import useInterceptedFetch from "../hook/useInterceptedFetch.ts";
 import useAuth from "../hook/useAuth.ts";
 import API_ENDPOINTS from "../util/endpoint/ApiEndpoint.ts";
 import HttpMethod from "../util/HttpMethod.ts";
 import SimpleTicketDto from "../model/ticket/SimpleTicketDto.ts";
+import Privilege from "../model/member/Privilege.ts";
+
 
 interface SimpleTransactionDto {
     id: number;
@@ -27,6 +29,8 @@ const Dashboard = () => {
 
     const loadDashboardData = async () => {
         if (!auth.memberId) return;
+        if (auth.privilege === Privilege.ADMINISTRATOR) return;
+
         setLoading(true);
 
         try {

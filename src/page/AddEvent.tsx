@@ -1,13 +1,12 @@
-import { Box, Button, Grid, MenuItem, Paper, TextField, Typography } from "@mui/material";
+import {Box, Button, Grid, MenuItem, Paper, TextField, Typography} from "@mui/material";
 import dayjs from "dayjs";
-import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import {useContext, useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
 import AlertContext from '../context/AlertProvider.tsx';
 import AuthContext from "../context/AuthProvider.tsx";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
-import { BuildingDto } from "../model/building/BuildingDto.ts";
-import { RowDto } from "../model/building/RowDto.ts";
-import Privilege from "../model/member/Privilege.ts";
+import {BuildingDto} from "../model/building/BuildingDto.ts";
+import {RowDto} from "../model/building/RowDto.ts";
 import ApiEndpoint from "../util/endpoint/ApiEndpoint";
 import WebEndpoint from "../util/endpoint/WebEndpoint";
 
@@ -27,15 +26,9 @@ const AddEventPage = () => {
     const navigate = useNavigate();
     const { auth } = useContext(AuthContext);
     const { showAlert } = useContext(AlertContext);
-    const role = auth.privilege;
-    const organizerId = auth.memberId;
-    console.log('organizerId: ', organizerId);
+    const privilegedMemberId = auth.memberId;
 
     useEffect(() => {
-        if(role !== Privilege.ORGANIZER){
-            return;
-        }
-
         fetch({ endpoint: `${ApiEndpoint.buildings}?status=APPROVED` })
             .then(res => res.json())
             .then(setBuildings);
@@ -57,11 +50,11 @@ const AddEventPage = () => {
     }
 
     const handleSubmit = async () => {
-        if(organizerId === undefined) {
+        if(privilegedMemberId === undefined) {
             return;
         }
         const payload = {
-            organizerId,
+            organizerId: privilegedMemberId,
             name,
             buildingId,
             date,
