@@ -168,9 +168,26 @@ const EventsHub = () => {
                                             </button>
                                         </div>
                                     ) : (
-                                        <button onClick={(e) => e.stopPropagation()} className="w-full bg-slate-900 text-white py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-sm hover:bg-black transition-colors">
-                                            Access & Buy Tickets
-                                        </button>
+                                        <div className="space-y-2">
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(WEB_ENDPOINTS.buyTickets.replace(":id", event.id.toString()));
+                                                }}
+                                                className="w-full bg-slate-900 text-white py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-sm hover:bg-black transition-colors"
+                                            >
+                                                Access & Buy Tickets
+                                            </button>
+                                            <button
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    navigate(WEB_ENDPOINTS.resaleTickets.replace(":id", event.id.toString()));
+                                                }}
+                                                className="w-full border border-[#0053db]/30 text-[#0053db] py-2.5 text-[10px] font-bold uppercase tracking-widest rounded-sm hover:bg-blue-50 transition-colors"
+                                            >
+                                                Browse Resale Tickets
+                                            </button>
+                                        </div>
                                     )}
                                 </div>
                             </div>

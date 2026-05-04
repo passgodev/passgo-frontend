@@ -26,6 +26,7 @@ import UserManagement from "./page/member/UserManagement.tsx";
 import TicketPurchasePage from "./page/TicketPurchasePage.tsx";
 import Transaction from "./page/transaction/Transaction.tsx";
 import EventStatsPage from "./page/EventStatsPage.tsx";
+import ResaleTicketsPage from "./page/ResaleTicketsPage";
 
 const App = () => {
     return (
@@ -52,6 +53,7 @@ const App = () => {
                             <Route path={WEB_ENDPOINTS.activeMemberProfile} element={<Dashboard />} />
                         </Route>
                         <Route path={WEB_ENDPOINTS.buyTickets} element={<TicketPurchasePage />} />
+                        <Route path={WEB_ENDPOINTS.resaleTickets} element={<ResaleTicketsPage />} />
                         <Route path={WEB_ENDPOINTS.transaction} element={<Transaction />} />
                     </Route>
 
