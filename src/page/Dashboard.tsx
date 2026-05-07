@@ -1,4 +1,4 @@
-import {useEffect, useState} from "react";
+import {useEffect, useMemo, useState} from "react";
 import useInterceptedFetch from "../hook/useInterceptedFetch.ts";
 import useAuth from "../hook/useAuth.ts";
 import API_ENDPOINTS from "../util/endpoint/ApiEndpoint.ts";
@@ -26,6 +26,13 @@ const Dashboard = () => {
     // Top-Up State
     const [isTopUpOpen, setIsTopUpOpen] = useState(false);
     const [topUpAmount, setTopUpAmount] = useState("");
+
+    // Resell State
+    const [isResellOpen, setIsResellOpen] = useState(false);
+    const [resellTicket, setResellTicket] = useState<SimpleTicketDto | null>(null);
+    const [resellPrice, setResellPrice] = useState("");
+    const [resellSubmitting, setResellSubmitting] = useState(false);
+    const [resellError, setResellError] = useState<string | null>(null);
 
     const loadDashboardData = async () => {
         if (!auth.memberId) return;
@@ -107,6 +114,63 @@ const Dashboard = () => {
             loadDashboardData(); // Refresh tickets, wallet, and tx history
         } catch (error) {
             console.error("Return error:", error);
+        }
+    };
+
+    const openResellDialog = (ticket: SimpleTicketDto) => {
+        setResellTicket(ticket);
+        setResellPrice(ticket.price?.toFixed(2) ?? "");
+        setResellError(null);
+        setIsResellOpen(true);
+    };
+
+    const closeResellDialog = () => {
+        if (resellSubmitting) return;
+        setIsResellOpen(false);
+        setResellTicket(null);
+        setResellPrice("");
+        setResellError(null);
+    };
+
+    const parsedResellPrice = useMemo(() => {
+        // Allow comma for PL locales, but send dot to backend
+        const normalized = resellPrice.trim().replace(",", ".");
+        const v = Number(normalized);
+        if (!Number.isFinite(v)) return null;
+        return v;
+    }, [resellPrice]);
+
+    const canSubmitResell = !!resellTicket && parsedResellPrice !== null && parsedResellPrice >= 0 && !resellSubmitting;
+
+    const handleConfirmResell = async () => {
+        if (!resellTicket) return;
+        if (parsedResellPrice === null || parsedResellPrice < 0) {
+            setResellError("Provide a valid non-negative price.");
+            return;
+        }
+
+        setResellSubmitting(true);
+        setResellError(null);
+        try {
+            const params = new URLSearchParams({ price: parsedResellPrice.toString() });
+            const endpoint = `${API_ENDPOINTS.resellTicket.replace(":id", resellTicket.id.toString())}?${params.toString()}`;
+            const res = await interceptedFetch({
+                endpoint,
+                reqInit: { method: HttpMethod.POST },
+            });
+
+            if (!res.ok) {
+                const text = await res.text().catch(() => "");
+                throw new Error(text || `Resell failed (${res.status})`);
+            }
+
+            closeResellDialog();
+            loadDashboardData(); // Refresh: ticket should disappear from client list
+        } catch (error) {
+            console.error("Resell error:", error);
+            setResellError("Resell request failed. Please try again.");
+        } finally {
+            setResellSubmitting(false);
         }
     };
 
@@ -214,6 +278,13 @@ const Dashboard = () => {
                                             <button onClick={() => handleReturnTicket(ticket.id)} className="flex-1 border border-red-200 text-red-600 py-1.5 text-[10px] font-bold uppercase tracking-widest hover:bg-red-50 transition-colors rounded-sm flex items-center justify-center gap-1">
                                                 <span className="material-symbols-outlined text-[14px]">assignment_return</span> Return
                                             </button>
+                                            <button
+                                                onClick={() => openResellDialog(ticket)}
+                                                className="px-2.5 border border-[#a9b4b9]/50 text-[#566166] py-1.5 text-[10px] font-bold uppercase tracking-widest hover:border-[#0053db] hover:text-[#0053db] transition-colors rounded-sm flex items-center justify-center gap-1"
+                                                title="Resell ticket"
+                                            >
+                                                <span className="material-symbols-outlined text-[14px]">sell</span> Resell
+                                            </button>
                                         </div>
                                     </div>
                                 ))
@@ -257,6 +328,60 @@ const Dashboard = () => {
                     </div>
                 </div>
             </div>
+
+            {/* Resell Dialog Overlay */}
+            {isResellOpen && resellTicket && (
+                <div className="fixed inset-0 bg-slate-900/10 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
+                    <div className="bg-white w-full max-w-md rounded-sm shadow-2xl border border-slate-300 animation-fade-in">
+                        <div className="p-6 border-b border-slate-100 flex justify-between items-center">
+                            <div>
+                                <h2 className="text-sm font-black uppercase tracking-widest text-slate-900">Offer for Resell</h2>
+                                <p className="text-[11px] text-slate-500 mt-1">{resellTicket.eventName}</p>
+                            </div>
+                            <button
+                                onClick={closeResellDialog}
+                                className="material-symbols-outlined text-slate-400 hover:text-slate-600"
+                                aria-label="Close dialog"
+                            >
+                                close
+                            </button>
+                        </div>
+                        <div className="p-8 space-y-4">
+                            <div>
+                                <label className="block text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-2">Resell price (PLN)</label>
+                                <input
+                                    type="text"
+                                    inputMode="decimal"
+                                    value={resellPrice}
+                                    onChange={(e) => setResellPrice(e.target.value)}
+                                    className="w-full border border-slate-200 px-4 py-2.5 text-sm focus:border-primary focus:outline-none transition-all"
+                                    placeholder="0.00"
+                                    disabled={resellSubmitting}
+                                />
+                                {resellError && (
+                                    <p className="mt-2 text-[11px] font-semibold text-red-600">{resellError}</p>
+                                )}
+                            </div>
+                        </div>
+                        <div className="p-6 bg-slate-50 flex justify-end gap-3 border-t border-slate-100">
+                            <button
+                                onClick={closeResellDialog}
+                                className="px-4 py-2 text-[10px] font-bold uppercase tracking-widest text-slate-500 hover:text-slate-800 disabled:opacity-50"
+                                disabled={resellSubmitting}
+                            >
+                                Discard
+                            </button>
+                            <button
+                                onClick={handleConfirmResell}
+                                className="bg-primary text-white px-6 py-2 text-[10px] font-bold uppercase tracking-widest rounded-sm hover:bg-primary-dim shadow-md disabled:opacity-50 disabled:cursor-not-allowed"
+                                disabled={!canSubmitResell}
+                            >
+                                {resellSubmitting ? "Submitting..." : "Offer Ticket"}
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
         </div>
     );
 };
