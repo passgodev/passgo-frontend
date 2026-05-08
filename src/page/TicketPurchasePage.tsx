@@ -15,8 +15,9 @@ import {
   TableRow,
   Typography,
 } from "@mui/material";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+import AlertContext from "../context/AlertProvider";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
 import API_ENDPOINTS from "../util/endpoint/ApiEndpoint";
 import DeleteIcon from "@mui/icons-material/Delete";
@@ -35,6 +36,7 @@ interface Ticket {
 const TicketPurchasePage = () => {
   const { id } = useParams<{ id: string }>();
   const InterceptedFetch = useInterceptedFetch();
+  const { showAlert } = useContext(AlertContext);
 
   const [eventTitle, setEventTitle] = useState<string>("");
   const [tickets, setTickets] = useState<Ticket[]>([]);
@@ -124,7 +126,7 @@ const TicketPurchasePage = () => {
     );
 
     if (alreadyAdded) {
-      alert("This ticket has already been choosen.");
+      showAlert("This ticket has already been choosen.", "error");
       return;
     }
 
@@ -133,7 +135,7 @@ const TicketPurchasePage = () => {
 
   const handleBuyTickets = async () => {
     if (addedTickets.length === 0) {
-      alert("Add at least one ticket.");
+      showAlert("Add at least one ticket.", "error");
       return;
     }
 
@@ -164,12 +166,12 @@ const TicketPurchasePage = () => {
         throw new Error(backendMessage);
       }
 
-      alert("Succesfully purchased tickets.");
+      showAlert("Successfully purchased tickets.", "info");
       setAddedTickets([]);
     } catch (err) {
       console.error(err);
       const message = err instanceof Error ? err.message : "Something went wrong!";
-      alert(message);
+      showAlert(message, "error");
     }
   };
 
