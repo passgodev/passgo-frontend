@@ -108,10 +108,6 @@ const UserManagement = () => {
                     </p>
                 </div>
                 <div className="flex gap-3">
-                    <button className="px-4 py-2 bg-white border border-slate-300 text-slate-700 text-[11px] font-bold uppercase tracking-widest flex items-center hover:bg-slate-50 transition-colors rounded-sm shadow-sm">
-                        <span className="material-symbols-outlined text-[16px] mr-2">download</span>
-                        Export CSV
-                    </button>
                     {/* Fixed: Routes directly to the Signup Page */}
                     <button 
                         onClick={() => navigate(WEB_ENDPOINTS.signup)}
