@@ -4,8 +4,11 @@ import { Typography, Box, CircularProgress, Button, Chip, Paper, Divider, Stack 
 import { useNavigate } from "react-router-dom";
 import useInterceptedFetch from "../hook/useInterceptedFetch";
 import API_ENDPOINTS from "../util/endpoint/ApiEndpoint";
-import ArrowForwardIcon from "@mui/icons-material/ArrowForward";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ChevronRightIcon from "@mui/icons-material/ChevronRight";
+import LocationOnIcon from "@mui/icons-material/LocationOn";
+import ArchitectureIcon from "@mui/icons-material/Architecture";
+import MusicNoteIcon from "@mui/icons-material/MusicNote";
 
 interface EventDetails {
     id: number;
@@ -152,6 +155,7 @@ const EventDetailsPage = () => {
                   <Box>
                     <Box sx={{ display: "flex", alignItems: "center", gap: 1.5, mb: 1.5 }}>
                       <Chip
+                        icon={<MusicNoteIcon />}
                         label={event.category.toUpperCase()}
                         sx={{
                           bgcolor: "#dce8ff",
@@ -336,21 +340,13 @@ const EventDetailsPage = () => {
                       }}
                     >
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, mb: 2.5 }}>
-                        <Box
+                        <LocationOnIcon
                           sx={{
                             width: 28,
                             height: 28,
-                            display: "grid",
-                            placeItems: "center",
-                            borderRadius: "6px",
-                            bgcolor: "#eff4fb",
                             color: "#2956b5",
-                            fontWeight: 900,
-                            fontSize: 14,
                           }}
-                        >
-                          📍
-                        </Box>
+                        />
                         <Typography
                           sx={{
                             fontSize: 12,
@@ -429,21 +425,13 @@ const EventDetailsPage = () => {
                       }}
                     >
                       <Box sx={{ display: "flex", alignItems: "center", gap: 1.25, mb: 2.5 }}>
-                        <Box
+                        <ArchitectureIcon
                           sx={{
                             width: 28,
                             height: 28,
-                            display: "grid",
-                            placeItems: "center",
-                            borderRadius: "6px",
-                            bgcolor: "#eff4fb",
                             color: "#2956b5",
-                            fontWeight: 900,
-                            fontSize: 14,
                           }}
-                        >
-                          🏛️
-                        </Box>
+                        />
                         <Typography
                           sx={{
                             fontSize: 12,
@@ -567,7 +555,7 @@ const EventDetailsPage = () => {
                   >
                     <ShoppingCartIcon sx={{ fontSize: 20 }} />
                     Buy tickets
-                    <ArrowForwardIcon sx={{ fontSize: 18 }} />
+                    <ChevronRightIcon sx={{ fontSize: 20 }} />
                   </Button>
                 </Box>
               </Stack>
