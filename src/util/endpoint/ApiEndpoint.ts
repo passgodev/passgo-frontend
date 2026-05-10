@@ -14,20 +14,25 @@ const API_ENDPOINTS = {
     memberById: endpointCreator('/members/:id?type=:memberType'),
     activateOrganizer: endpointCreator('/members/organizers/:id/activation'),
     events: endpointCreator('/events'),
+    eventById: endpointCreator('/events/:id'),
     approvedEvents: endpointCreator('/events?status=APPROVED'),
     organizerEvents: endpointCreator('/events/:id/organizer'),
     eventImage: endpointCreator('/events/:id/image'),
     buildings: endpointCreator('/buildings'),
     buyTickets: endpointCreator('/tickets/purchase'),
+    buyTicketsOnSale: endpointCreator('/tickets/purchase-on-sale'),
     clientTickets: endpointCreator('/tickets/client/:id'),
+    ticketsForSale: endpointCreator('/tickets/for-sale'),
     transactionsByClientId: endpointCreator('/transactions/user/:id'),
     returnTicket: endpointCreator('/tickets/:id/return'),
+    resellTicket: endpointCreator('/tickets/:id/re-sell'),
     getTicketPdf: endpointCreator('/tickets/:id/pdf'),
     buildingsDetails: endpointCreator('/buildings/:id'),
     ticketsInfo: endpointCreator('/tickets/:eventId/info'),
     eventDetails: endpointCreator('/events/:id/details'),
     wallet: endpointCreator('/wallets/client/:id'),
-    addMoney: endpointCreator('/wallets/:id/transaction')
+    addMoney: endpointCreator('/wallets/:id/transaction'),
+    statistics: endpointCreator('/statistics')
 }
 
 

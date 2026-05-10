@@ -1,3 +1,4 @@
+import tailwindcss from '@tailwindcss/vite'; // 1. ADD THIS IMPORT
 import react from '@vitejs/plugin-react';
 import { defineConfig, loadEnv } from 'vite';
 
@@ -7,18 +8,21 @@ export default defineConfig(({ mode }) => {
 
     const CONFIGURATION = {
         protocol: 'http',
-        hostname: process.env.VITE_API_HOSTNAME ?? fileEnv.VITE_API_HOSTNAME ?? 'localhost',
-        port: process.env.VITE_API_PORT ?? fileEnv.VITE_API_PORT ?? 9090,
+        // Najpierw sprawdzamy wczytany plik .env, potem zmienne systemowe, na końcu dajemy domyślne
+        hostname: fileEnv.VITE_API_HOSTNAME || process.env.VITE_API_HOSTNAME || 'localhost',
+        port: fileEnv.VITE_API_PORT || process.env.VITE_API_PORT || 8080,
         pathPrefix: 'rest-api'
     };
-    console.log('Vite mode config:', mode, CONFIGURATION);
 
 
     const restApiEndpoint = `${CONFIGURATION.protocol}://${CONFIGURATION.hostname}:${CONFIGURATION.port}/${CONFIGURATION.pathPrefix}`;
     console.log(`Vite app is forwarding fetch to: ${restApiEndpoint}`)
 
     return {
-        plugins: [react()],
+        plugins: [
+            react(), 
+            tailwindcss() // 2. ADD THIS PLUGIN HERE
+        ],
         server: {
             proxy: {
                 '/api': {

@@ -35,10 +35,25 @@ export const AlertProvider = ({ children }: AlertProviderProps) => {
             {children}
             <Snackbar anchorOrigin={{vertical: 'bottom', horizontal: 'right'}}
                       open={open}
-                      autoHideDuration={3000}
+                      autoHideDuration={6000}
                       onClose={hideAlert}
                       slotProps={{clickAwayListener: { mouseEvent: false } }}>
-                <Alert onClose={hideAlert} severity={level} sx={{ width: '100%' }}>
+                <Alert onClose={hideAlert} 
+                       severity={level} 
+                       sx={{ 
+                         width: '100%',
+                         fontSize: '1rem',
+                         fontWeight: 600,
+                         padding: '16px 24px',
+                         '.MuiAlert-icon': {
+                           fontSize: '1.8rem',
+                           marginRight: '12px'
+                         },
+                         '.MuiAlert-message': {
+                           display: 'flex',
+                           alignItems: 'center'
+                         }
+                       }}>
                     {message}
                 </Alert>
             </Snackbar>

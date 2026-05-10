@@ -27,3 +27,4 @@ dist-ssr
 .env*
 # Do store example env files
 !.env*example*
+vite.config.ts
