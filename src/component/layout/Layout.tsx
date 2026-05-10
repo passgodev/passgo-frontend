@@ -5,11 +5,6 @@ import Privilege from "../../model/member/Privilege.ts";
 import WEB_ENDPOINTS from "../../util/endpoint/WebEndpoint.ts";
 import { useState } from "react";
 
-
-
-
-
-
 const Layout = () => {
     const { auth } = useAuth();
     const location = useLocation();
@@ -18,6 +13,12 @@ const Layout = () => {
     const isClient = auth?.privilege === Privilege.CLIENT;
     const isOrganizer = auth?.privilege === Privilege.ORGANIZER;
     const isAdmin = auth?.privilege === Privilege.ADMINISTRATOR;
+
+    const appBrandTitle = isAdmin
+        ? "PassGo Admin"
+        : isOrganizer
+          ? "PassGo Organizer"
+          : "PassGo";
 
     // 2. Inside your Layout component, add this state:
     const [searchQuery, setSearchQuery] = useState("");
@@ -43,7 +44,7 @@ const Layout = () => {
             {/* Sidebar Navigation */}
             <aside className="fixed left-0 top-0 h-screen w-60 border-r border-slate-300 bg-slate-100 flex flex-col py-4 z-50 shrink-0">
                 <div className="px-6 mb-8">
-                    <h1 className="text-xl font-black text-slate-900">PassGo Admin</h1>
+                    <h1 className="text-xl font-black text-slate-900">{appBrandTitle}</h1>
                     <p className="uppercase tracking-wider text-[10px] font-bold text-slate-500">Precision Logistics</p>
                 </div>
 
@@ -53,7 +54,7 @@ const Layout = () => {
                         <span className="uppercase tracking-wider text-[11px] font-bold">Events Hub</span>
                     </Link>
 
-                    {(isClient || isOrganizer) && (
+                    {isClient && (
                         <Link to={WEB_ENDPOINTS.activeMemberProfile} className={`flex items-center px-3 py-2 cursor-pointer transition-all duration-150 group rounded-sm ${location.pathname === WEB_ENDPOINTS.activeMemberProfile ? 'bg-slate-200/50 text-blue-700 border-l-4 border-blue-700' : 'text-slate-500 hover:bg-slate-200'}`}>
                             <span className="material-symbols-outlined mr-3 text-[20px]">account_balance_wallet</span>
                             <span className="uppercase tracking-wider text-[11px] font-bold">My Dashboard</span>
